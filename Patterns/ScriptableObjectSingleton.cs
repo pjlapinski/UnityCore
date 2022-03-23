@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace PJL.Patterns
 {
-    public abstract class ScriptableObjectSingleton<T> : ScriptableObject where T : Configurator<T>
+    public abstract class ScriptableObjectSingleton<T> : ScriptableObject where T : ScriptableObjectSingleton<T>
     {
         private static T s_instance;
 

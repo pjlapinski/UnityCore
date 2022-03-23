@@ -18,7 +18,7 @@ namespace PJL.Utilities.Logging
             { Context.UI, new Color(0f, .6f, .9f) },
             { Context.Dialogues, new Color(.5f, .9f, .5f) },
             { Context.Localization, new Color(.9f, .9f, 0f) },
-            { Context.AI, Color.Cyan },
+            { Context.AI, Color.cyan },
             { Context.Core, Color.red }
         };
 
