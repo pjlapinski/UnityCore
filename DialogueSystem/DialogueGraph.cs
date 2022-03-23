@@ -15,8 +15,8 @@ namespace PJL.DialogueSystem
         public event Action OnEnd;
         public event Action<BaseDialogueNode> OnProgress;
 
-        [field: SerializeField] public string[] Speakers { get; private set; }
-        [field: SerializeField] internal string[] RequiredFuncPathSelectors { get; private set; }
+        [field: SerializeField] public string[] Speakers { get; private set; } = Array.Empty<string>();
+        [field: SerializeField] internal string[] RequiredFuncPathSelectors { get; private set; } = Array.Empty<string>();
 
         public Dictionary<string, Func<ushort>> PathSelectors { get; } = new();
         public BaseDialogueNode CurrentNode { get; set; }
