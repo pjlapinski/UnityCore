@@ -5,6 +5,7 @@ using System.Collections.Generic;
 namespace PJL.Utilities.Collections
 {
     // Acts like a Dictionary<TEnum, TValue>
+    [Serializable]
     public class EnumArray<TEnum, TValue> : IEnumerable<TValue> where TEnum : struct, Enum
     {
         private readonly TValue[] _values;
