@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace PJL.Utilities.Logging
+namespace PJL.Logging
 {
     public class LoggingComponent : MonoBehaviour
     {

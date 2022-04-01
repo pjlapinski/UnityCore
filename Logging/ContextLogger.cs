@@ -5,7 +5,7 @@ using System.Text;
 using JetBrains.Annotations;
 using UnityEngine;
 
-namespace PJL.Utilities.Logging
+namespace PJL.Logging
 {
     public enum Context { UI, Dialogues, Localization, AI, Core }
 
@@ -19,7 +19,7 @@ namespace PJL.Utilities.Logging
             { Context.Dialogues, new Color(.5f, .9f, .5f) },
             { Context.Localization, new Color(.9f, .9f, 0f) },
             { Context.AI, Color.cyan },
-            { Context.Core, Color.red }
+            { Context.Core, Color.red },
         };
 
         private static readonly Dictionary<Severity, Color> SeverityColors = new()
@@ -42,6 +42,31 @@ namespace PJL.Utilities.Logging
             Severity.Assertion,
             Severity.Warning,
         };
+
+        public static void TestLog(Context context, string message) => TestLogFormat(context, message);
+
+        [StringFormatMethod("format")]
+        public static void TestLogFormat(Context context, string format, params object[] insertions)
+        {
+#if UNITY_EDITOR
+            try
+            {
+                GenerateColoredText(ContextColors[context], $"[{context}]");
+                StringBuilder.Append(' ');
+
+                var coloredInsertions = insertions
+                    .Select(insertion => $"{HtmlColorPrefix}{FormatInsertionColorHex}>{insertion}{HtmlColorSuffix}")
+                    .OfType<object>()
+                    .ToArray();
+                StringBuilder.Append(format);
+                Debug.LogFormat(StringBuilder.ToString(), coloredInsertions);
+            }
+            finally
+            {
+                StringBuilder.Clear();
+            }
+#endif
+        }
 
         public static void Log(Severity severity, Context context, string message) =>
             LogFormat(severity, context, message);

@@ -1,4 +1,4 @@
-using PJL.Utilities.Logging;
+using PJL.Logging;
 using UnityEngine;
 using UnityEngine.UIElements;
 
