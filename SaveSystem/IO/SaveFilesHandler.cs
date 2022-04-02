@@ -35,21 +35,58 @@ namespace PJL.SaveSystem.IO
 
         private static string GetFileName(string path) => path.Split(Path.DirectorySeparatorChar)[^1];
 
-        private int GetNextSaveIndex()
+        private string GetFilePreamble(string path)
+        {
+            var preambleBuilder = new StringBuilder();
+            using var reader = new StreamReader(path);
+            string line;
+
+            while ((line = reader.ReadLine()) != null && line != PreambleSeparator)
+                preambleBuilder.Append(line);
+
+            return preambleBuilder.ToString();
+        }
+
+        private void SaveToIndex(int saveIndex, string data)
+        {
+            if (saveIndex < 0) return;
+            EnsureSavesDirectoryExists();
+            using var writer = new StreamWriter(GetSaveFullPath(saveIndex));
+            writer.Write(data);
+        }
+
+        public int GetNextSaveIndex()
         {
             EnsureSavesDirectoryExists();
             var files = Directory.GetFiles(SavesPath);
-            var idx = 0;
+            var max = 0;
 
             foreach (var file in files)
             {
                 if (!file.EndsWith(_fileFormat)) continue;
                 var filename = GetFileName(file);
-                if (int.TryParse(filename[..^_fileFormat.Length], out var fileIdx))
-                    idx = fileIdx + 1;
+                if (int.TryParse(filename[..^_fileFormat.Length], out var fileIdx) && max <= fileIdx)
+                    max = fileIdx + 1;
             }
 
-            return idx;
+            return max;
+        }
+
+        public bool SaveExists(int saveIndex)
+        {
+            EnsureSavesDirectoryExists();
+            var file = GetSaveFullPath(saveIndex);
+            return File.Exists(file);
+        }
+
+        public SaveFileData GetSaveFileData(int saveIndex)
+        {
+            EnsureSavesDirectoryExists();
+            var file = GetSaveFullPath(saveIndex);
+            if (!File.Exists(file)) return new SaveFileData(-1, null);
+
+            var preamble = GetFilePreamble(file);
+            return new SaveFileData(saveIndex, preamble);
         }
 
         public IList<SaveFileData> GetAllSaveFilesData()
@@ -63,50 +100,52 @@ namespace PJL.SaveSystem.IO
                 if (!file.EndsWith(_fileFormat)) continue;
                 var filename = GetFileName(file);
                 if (!int.TryParse(filename[..^_fileFormat.Length], out var fileIdx)) continue;
-                var preambleBuilder = new StringBuilder();
+                var preamble = GetFilePreamble(file);
 
-                using (var reader = new StreamReader(file))
-                {
-                    string line;
-
-                    while ((line = reader.ReadLine()) != null && line != PreambleSeparator)
-                    {
-                        preambleBuilder.Append(line);
-                    }
-                }
-
-                results.Add(new SaveFileData(fileIdx, preambleBuilder.ToString()));
+                results.Add(new SaveFileData(fileIdx, preamble));
             }
 
             return results;
         }
 
-        public void Save(string data)
+        public void Save(string data) => SaveToIndex(GetNextSaveIndex(), data);
+
+        public void Override(int saveIndex, string data)
         {
-            EnsureSavesDirectoryExists();
-            var idx = GetNextSaveIndex();
-            using var writer = new StreamWriter(GetSaveFullPath(idx));
-            writer.Write(data);
+            if (!Delete(saveIndex)) return;
+            SaveToIndex(saveIndex, data);
         }
 
         public bool TryLoad(int saveIndex, out string data)
         {
-            EnsureSavesDirectoryExists();
-            var files = Directory.GetFiles(SavesPath);
-
-            foreach (var file in files)
+            if (saveIndex < 0)
             {
-                if (!file.EndsWith(_fileFormat)) continue;
-                var filename = GetFileName(file);
-                if (int.TryParse(filename[..^_fileFormat.Length], out var fileIdx) && fileIdx == saveIndex)
-                {
-                    data = File.ReadAllText(file);
-                    return true;
-                }
+                data = null;
+                return false;
+            }
+            EnsureSavesDirectoryExists();
+
+            var file = GetSaveFullPath(saveIndex);
+            if (!File.Exists(file))
+            {
+                data = null;
+                return false;
             }
 
-            data = null;
-            return false;
+            data = File.ReadAllText(file);
+            return true;
+        }
+
+        public bool Delete(int saveIndex)
+        {
+            if (saveIndex < 0) return false;
+            EnsureSavesDirectoryExists();
+
+            var file = GetSaveFullPath(saveIndex);
+            if (!File.Exists(file)) return false;
+
+            File.Delete(file);
+            return true;
         }
     }
 }
