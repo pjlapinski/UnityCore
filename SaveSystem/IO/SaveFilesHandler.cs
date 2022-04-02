@@ -41,8 +41,13 @@ namespace PJL.SaveSystem.IO
             using var reader = new StreamReader(path);
             string line;
 
-            while ((line = reader.ReadLine()) != null && line != PreambleSeparator)
+            var trimmedSeparator = PreambleSeparator.Trim();
+            while ((line = reader.ReadLine()) != null)
+            {
+                if (line.Trim() == trimmedSeparator)
+                    break;
                 preambleBuilder.Append(line);
+            }
 
             return preambleBuilder.ToString();
         }
