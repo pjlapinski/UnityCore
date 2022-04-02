@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace PJL.Logging
 {
-    public enum Context { UI, Dialogues, Localization, AI, Core }
+    public enum Context { UI, Dialogues, Localization, AI, Core, Application }
 
     public enum Severity { Message, Assertion, Warning, Error, }
 
@@ -20,6 +20,7 @@ namespace PJL.Logging
             { Context.Localization, new Color(.9f, .9f, 0f) },
             { Context.AI, Color.cyan },
             { Context.Core, Color.red },
+            { Context.Application, Color.gray },
         };
 
         private static readonly Dictionary<Severity, Color> SeverityColors = new()
@@ -43,7 +44,8 @@ namespace PJL.Logging
             Severity.Warning,
         };
 
-        public static void TestLog(Context context, string message) => TestLogFormat(context, message);
+        public static void TestLog(object message) => TestLog(Context.Application, message);
+        public static void TestLog(Context context, object message) => TestLogFormat(context, message.ToString());
 
         [StringFormatMethod("format")]
         public static void TestLogFormat(Context context, string format, params object[] insertions)
@@ -68,8 +70,8 @@ namespace PJL.Logging
 #endif
         }
 
-        public static void Log(Severity severity, Context context, string message) =>
-            LogFormat(severity, context, message);
+        public static void Log(Severity severity, Context context, object message) =>
+            LogFormat(severity, context, message.ToString());
 
         [StringFormatMethod("format")]
         public static void LogFormat(Severity severity, Context context, string format, params object[] insertions)
