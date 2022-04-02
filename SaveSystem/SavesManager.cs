@@ -10,7 +10,7 @@ namespace PJL.SaveSystem
 
         public SavesManagerSettings Settings { get; set; }
 
-        public SavesManager() : this(new SavesManagerSettings()) { }
+        public SavesManager() : this(SavesManagerSettings.Create()) { }
         public SavesManager(SavesManagerSettings settings)
         {
             Settings = settings;
@@ -87,31 +87,5 @@ namespace PJL.SaveSystem
         /// will be the prefix of the file's name)</param>
         /// <returns>Whether the save file was successfully deleted</returns>
         public bool DeleteSave(int saveIndex) => Settings.FilesHandler.Delete(saveIndex);
-    }
-
-    public class SavesManagerSettings
-    {
-        private ISerializationProvider _serializationProvider;
-        private IFilesHandler _filesHandler;
-
-        // A generated GUID, to not interfere with file contents
-        public string PreambleSeparator { get; set; } = "3847facf-b237-430b-b4b3-7d388f5d1f26\n";
-        public ISerializationProvider SerializationProvider
-        {
-            get
-            {
-                return _serializationProvider ??= new JsonSerializationProvider(PreambleSeparator);
-            }
-            set => _serializationProvider = value;
-        }
-
-        public IFilesHandler FilesHandler
-        {
-            get
-            {
-                return _filesHandler ??= new SaveFilesHandler(PreambleSeparator);
-            }
-            set => _filesHandler = value;
-        }
     }
 }
