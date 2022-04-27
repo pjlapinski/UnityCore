@@ -137,7 +137,7 @@ namespace PJL.Utilities.Extensions
             return -1;
         }
 
-        public static int FindIndexOf<T>(this IList<T> source, Predicate<T> predicate)
+        public static int FindIndexOf<T>(this IList<T> source, Func<T, bool> predicate)
         {
             for (var i = 0; i < source.Count; i++)
                 if (predicate(source[i]))
@@ -145,7 +145,7 @@ namespace PJL.Utilities.Extensions
             return -1;
         }
 
-        public static int FindLastIndexOf<T>(this IList<T> source, Predicate<T> predicate)
+        public static int FindLastIndexOf<T>(this IList<T> source, Func<T, bool> predicate)
         {
             for (var i = source.Count - 1; i >= 0; i++)
                 if (predicate(source[i]))
@@ -174,6 +174,20 @@ namespace PJL.Utilities.Extensions
         #region Empty
 
         public static bool Empty<T>(this IEnumerable<T> source) => !source.Any();
+
+        #endregion
+
+        #region Rotate
+
+        public static IEnumerable<TSource> RotateLeft<TSource>(this IEnumerable<TSource> source, int count) => source
+            .Skip(count)
+            .Concat(source.Take(count));
+
+        public static IEnumerable<TSource> RotateRight<TSource>(this IEnumerable<TSource> source, int count)
+        {
+            var sourceCount = source.Count();
+            return source.Skip(sourceCount - count).Concat(source.Take(sourceCount - count));
+        }
 
         #endregion
     }
