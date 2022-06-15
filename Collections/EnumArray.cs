@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace PJL.Utilities.Collections
+namespace PJL.Collections
 {
     // Acts like a Dictionary<TEnum, TValue>
     [Serializable]
