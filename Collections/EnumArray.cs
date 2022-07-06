@@ -8,8 +8,7 @@ namespace PJL.Collections
     [Serializable]
     public class EnumArray<TEnum, TValue> : IEnumerable<TValue> where TEnum : struct, Enum
     {
-        [SerializeField]
-        private TValue[] _values;
+        [SerializeField] private TValue[] _values;
 
         public int Length => _values.Length;
         public long LongLength => _values.LongLength;
@@ -25,7 +24,9 @@ namespace PJL.Collections
             set => _values[(int)Convert.ChangeType(key, typeof(int))] = value;
         }
 
-        public IEnumerator<TValue> GetEnumerator() => ((IEnumerable<TValue>) _values).GetEnumerator();
+        public IEnumerator<KeyValuePair<TEnum, TValue>> GetEnumerator() => _values
+            .Select((val, i) => new KeyValuePair<TEnum, TValue>((TEnum)Convert.ChangeType(i, typeof(TEnum)), val))
+            .GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
