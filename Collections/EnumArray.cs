@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -8,7 +8,8 @@ namespace PJL.Collections
     [Serializable]
     public class EnumArray<TEnum, TValue> : IEnumerable<TValue> where TEnum : struct, Enum
     {
-        private readonly TValue[] _values;
+        [SerializeField]
+        private TValue[] _values;
 
         public int Length => _values.Length;
         public long LongLength => _values.LongLength;
