@@ -105,6 +105,12 @@ namespace PJL.Utilities.Extensions
 
         public static TSource RandomOrDefault<TSource>(this IEnumerable<TSource> source, int seed) =>
             source.Shuffle(seed).FirstOrDefault();
+        
+        public static TSource RandomOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate) =>
+            source.Shuffle().FirstOrDefault(predicate);
+
+        public static TSource RandomOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate, int seed) =>
+            source.Shuffle(seed).FirstOrDefault(predicate);
 
 
         #endregion
