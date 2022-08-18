@@ -1,12 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace PJL.Collections
 {
     // Acts like a Dictionary<TEnum, TValue>
     [Serializable]
-    public class EnumArray<TEnum, TValue> : IEnumerable<TValue> where TEnum : struct, Enum
+    public class EnumArray<TEnum, TValue> : IEnumerable<KeyValuePair<TEnum, TValue>> where TEnum : struct, Enum
     {
         [SerializeField] private TValue[] _values;
 

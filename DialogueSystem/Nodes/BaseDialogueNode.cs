@@ -1,5 +1,5 @@
 ﻿using System;
-using PJL.Utilities.Logging;
+using PJL.Logging;
 using UnityEngine;
 using UnityEngine.Localization;
 using XNode;
