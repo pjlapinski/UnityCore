@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -56,3 +57,4 @@ public static class PlayFromTheFirstScene
             Debug.Log(msg); // When there's no scene view opened, we just print a log
     }
 }
+#endif
