@@ -47,14 +47,14 @@ namespace PJL.DialogueSystem
             for (var i = 0; i < selectorsLength; ++i)
             {
                 if (PathSelectors.ContainsKey(RequiredFuncPathSelectors[i])) continue;
-                ContextLogger.LogFormat(Severity.Error, Context.Dialogues, "Missing path selector function for {0} selector.", RequiredFuncPathSelectors[i]);
+                ContextLogger.LogFormat(Severity.Error, "DIALOGUES", "Missing path selector function for {0} selector.", RequiredFuncPathSelectors[i]);
                 return;
             }
 
             CurrentNode = StarterNode;
             if (CurrentNode == null)
             {
-                ContextLogger.LogFormat(Severity.Error, Context.Dialogues, "The dialogue '{0}' has no starting nodes.", name);
+                ContextLogger.LogFormat(Severity.Error, "DIALOGUES", "The dialogue '{0}' has no starting nodes.", name);
                 return;
             }
             OnStart?.Invoke();
@@ -68,16 +68,18 @@ namespace PJL.DialogueSystem
                     .OfType<BaseDialogueNode>()
                     .Where(node => node != null && node.IsStartingNode)
                     .ToArray();
+#if UNITY_EDITOR
                 var playMode = EditorApplication.isPlaying;
                 if (candidates.Length == 0)
                 {
                     if (playMode)
-                        ContextLogger.LogFormat(Severity.Error, Context.Dialogues, "No starter nodes for '{0}' dialogue.", name);
+                        ContextLogger.LogFormat(Severity.Error, "DIALOGUES", "No starter nodes for '{0}' dialogue.", name);
 
                     return null;
                 }
                 if (candidates.Length > 1 && playMode)
-                    ContextLogger.LogFormat(Severity.Error, Context.Dialogues, "More than one starter node for '{0}' dialogue.", name);
+                    ContextLogger.LogFormat(Severity.Error, "DIALOGUES", "More than one starter node for '{0}' dialogue.", name);
+#endif
                 return candidates[0];
             }
         }

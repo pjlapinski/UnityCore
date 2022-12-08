@@ -16,7 +16,7 @@ namespace PJL.DialogueSystem
                 var speakers = (graph as DialogueGraph)?.Speakers;
                 if (speakers == null) return string.Empty;
                 if (_speakerIndex < speakers.Length) return speakers[_speakerIndex];
-                ContextLogger.LogFormat(Severity.Error, Context.Dialogues, "No speaker with index {0} in dialogue '{1}'.", _speakerIndex, graph.name);
+                ContextLogger.LogFormat(Severity.Error, "DIALOGUES", "No speaker with index {0} in dialogue '{1}'.", _speakerIndex, graph.name);
                 return string.Empty;
             }
         }

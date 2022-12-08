@@ -14,14 +14,14 @@ namespace PJL.UI
             Document = GetComponent<UIDocument>();
             if (Document == null)
             {
-                ContextLogger.LogFormat(Severity.Error, Context.UI, "No {0} on object {1}", nameof(UIDocument), name);
+                ContextLogger.LogFormat(Severity.Error, "UI", "No {0} on object {1}", nameof(UIDocument), name);
                 return;
             }
 
             Root = Document.rootVisualElement;
             if (Root == null)
             {
-                ContextLogger.LogFormat(Severity.Error, Context.UI, "No {0} on object {1}", "UI root element", name);
+                ContextLogger.LogFormat(Severity.Error, "UI", "No {0} on object {1}", "UI root element", name);
                 return;
             }
 

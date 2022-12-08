@@ -7,24 +7,13 @@ using UnityEngine;
 
 namespace PJL.Logging
 {
-    public enum Context { UI, Dialogues, Localization, AI, Core, Application }
-
     public enum Severity { Message, Assertion, Warning, Error, }
 
     public static class ContextLogger
     {
-        private static readonly Dictionary<Context, Color> ContextColors = new()
-        {
-            { Context.UI, new Color(0f, .6f, .9f) },
-            { Context.Dialogues, new Color(.5f, .9f, .5f) },
-            { Context.Localization, new Color(.9f, .9f, 0f) },
-            { Context.AI, Color.cyan },
-            { Context.Core, Color.red },
-            { Context.Application, Color.gray },
-        };
-
         private static readonly Dictionary<Severity, Color> SeverityColors = new()
         {
+            { Severity.Message, new Color(.3f, .7f, .4f) },
             { Severity.Assertion, new Color(.8f, .2f, .8f) },
             { Severity.Error, new Color(0.9f, 0.2f, 0.2f) },
             { Severity.Warning, new Color(.7f, .7f, 0.1f) },
@@ -44,16 +33,16 @@ namespace PJL.Logging
             Severity.Warning,
         };
 
-        public static void TestLog(object message) => TestLog(Context.Application, message);
-        public static void TestLog(Context context, object message) => TestLogFormat(context, message.ToString());
+        public static void TestLog(object message) => TestLog(string.Empty, message);
+        public static void TestLog(string context, object message) => TestLogFormat(context, message.ToString());
 
         [StringFormatMethod("format")]
-        public static void TestLogFormat(Context context, string format, params object[] insertions)
+        public static void TestLogFormat(string context, string format, params object[] insertions)
         {
 #if UNITY_EDITOR
             try
             {
-                GenerateColoredText(ContextColors[context], $"[{context}]");
+                GenerateColoredText(SeverityColors[Severity.Message], $"[{context}]");
                 StringBuilder.Append(' ');
 
                 var coloredInsertions = insertions
@@ -70,15 +59,15 @@ namespace PJL.Logging
 #endif
         }
 
-        public static void Log(Severity severity, Context context, object message) =>
+        public static void Log(Severity severity, string context, object message) =>
             LogFormat(severity, context, message.ToString());
 
         [StringFormatMethod("format")]
-        public static void LogFormat(Severity severity, Context context, string format, params object[] insertions)
+        public static void LogFormat(Severity severity, string context, string format, params object[] insertions)
         {
             try
             {
-                GenerateColoredText(ContextColors[context], $"[{context}]");
+                GenerateColoredText(SeverityColors[severity], $"[{context}]");
                 StringBuilder.Append(' ');
 
                 var coloredInsertions = insertions
