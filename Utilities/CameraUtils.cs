@@ -10,7 +10,7 @@ namespace PJL.Utilities
         {
             get
             {
-                if (s_mainCamera == null) s_mainCamera = Camera.main;
+                if (s_mainCamera == null || !s_mainCamera.enabled) s_mainCamera = Camera.main;
                 return s_mainCamera;
             }
         }
