@@ -45,5 +45,11 @@ namespace PJL.Utilities.Extensions
             z = quaternion.z;
             w = quaternion.w;
         }
+
+        public static Quaternion Quaternion(this Vector4 vector) => 
+            new(vector.x, vector.y, vector.z, vector.w);
+
+        public static Vector4 Vector4(this Quaternion quaternion) => 
+            new(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
     }
 }
