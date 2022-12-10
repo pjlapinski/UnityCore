@@ -26,6 +26,12 @@ namespace PJL.Collections
             set => _values[(int)Convert.ChangeType(key, typeof(int))] = value;
         }
 
+        public TValue this[int index]
+        {
+            get => _values[index];
+            set => _values[index] = value;
+        }
+
         public IEnumerator<KeyValuePair<TEnum, TValue>> GetEnumerator()
         {
             var enumType = typeof(TEnum);
