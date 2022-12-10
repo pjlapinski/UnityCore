@@ -20,9 +20,9 @@ namespace PJL.SaveSystem
                 _target = target;
             }
 
-            public SavesManagerSettingsBuilder WithPreamble(string preamble)
+            public SavesManagerSettingsBuilder WithPreambleSeparator(string preambleSeparator)
             {
-                _target.PreambleSeparator = preamble;
+                _target.PreambleSeparator = preambleSeparator;
                 return this;
             }
 
