@@ -2,90 +2,88 @@ using System.Collections.Generic;
 using PJL.SaveSystem.IO;
 using PJL.SaveSystem.Serialization;
 
-namespace PJL.SaveSystem
-{
-    public class SavesManager
-    {
-        public static SavesManager Shared { get; } = new();
+namespace PJL.SaveSystem {
+public class SavesManager {
+  public static SavesManager Shared { get; } = new();
 
-        public SavesManagerSettings Settings { get; set; }
+  public SavesManagerSettings Settings { get; set; }
 
-        public SavesManager() : this(SavesManagerSettings.Create()) { }
-        public SavesManager(SavesManagerSettings settings)
-        {
-            Settings = settings;
-        }
+  public SavesManager() : this(SavesManagerSettings.Create()) { }
 
-        /// <summary>
-        /// Add the serializable object to this manager's pool of subscribers.
-        /// </summary>
-        public void SubscribeForSerialization(ISerializable subscriber) =>
-            Settings.SerializationProvider.SubscribeForSerialization(subscriber);
+  public SavesManager(SavesManagerSettings settings) {
+    Settings = settings;
+  }
 
-        /// <summary>
-        /// Remove the serializable object from this manager's pool of subscribers.
-        /// </summary>
-        public void UnsubscribeFromSerialization(ISerializable subscriber) =>
-            Settings.SerializationProvider.UnsubscribeFromSerialization(subscriber);
+  /// <summary>
+  /// Add the serializable object to this manager's pool of subscribers.
+  /// </summary>
+  public void SubscribeForSerialization(ISerializable subscriber) =>
+    Settings.SerializationProvider.SubscribeForSerialization(subscriber);
 
-        /// <summary>
-        /// Checks whether a save file corresponding to the given save index exists.
-        /// </summary>
-        public bool SaveExists(int saveIndex) => Settings.FilesHandler.SaveExists(saveIndex);
+  /// <summary>
+  /// Remove the serializable object from this manager's pool of subscribers.
+  /// </summary>
+  public void UnsubscribeFromSerialization(ISerializable subscriber) =>
+    Settings.SerializationProvider.UnsubscribeFromSerialization(subscriber);
 
-        /// <summary>
-        /// Fetches the data from the file corresponding to the given save index.
-        /// </summary>
-        /// <returns>The SaveFileData object for the given save.</returns>
-        public SaveFileData GetSaveData(int saveIndex) => Settings.FilesHandler.GetSaveFileData(saveIndex);
+  /// <summary>
+  /// Checks whether a save file corresponding to the given save index exists.
+  /// </summary>
+  public bool SaveExists(int saveIndex) => Settings.FilesHandler.SaveExists(saveIndex);
 
-        /// <summary>
-        /// Creates a new save file based on all subscribed objects.
-        /// </summary>
-        /// <param name="preamble">The file's preamble, that contains information that can be quickly
-        /// read, for example save's in-game name.</param>
-        public void CreateSave(string preamble = "") => Settings.FilesHandler.Save(Settings.SerializationProvider.Serialize(preamble));
+  /// <summary>
+  /// Fetches the data from the file corresponding to the given save index.
+  /// </summary>
+  /// <returns>The SaveFileData object for the given save.</returns>
+  public SaveFileData GetSaveData(int saveIndex) => Settings.FilesHandler.GetSaveFileData(saveIndex);
 
-        /// <summary>
-        /// Overrides the content of a save file. Will not create a new file, if there is no matching one to override.
-        /// </summary>
-        /// <param name="saveIndex">The save's index (NOTE: this is not the index of the file
-        /// in the system. Instead it indicates that this is the n-th file created. The index
-        /// will be the prefix of the file's name)</param>
-        /// <param name="preamble">The file's preamble, that contains information that can be quickly
-        /// read, for example save's in-game name.</param>
-        public void OverrideSave(int saveIndex, string preamble = "") =>
-            Settings.FilesHandler.Override(saveIndex, Settings.SerializationProvider.Serialize(preamble));
+  /// <summary>
+  /// Creates a new save file based on all subscribed objects.
+  /// </summary>
+  /// <param name="preamble">The file's preamble, that contains information that can be quickly
+  /// read, for example save's in-game name.</param>
+  public void CreateSave(string preamble = "") =>
+    Settings.FilesHandler.Save(Settings.SerializationProvider.Serialize(preamble));
 
-        /// <summary>
-        /// Loads the correct save file and injects loaded data into subscribers, through their
-        /// 'GetDataFromCopy' methods.
-        /// </summary>
-        /// <param name="saveIndex">The save's index (NOTE: this is not the index of the file
-        /// in the system. Instead it indicates that this is the n-th file created. The index
-        /// will be the prefix of the file's name)</param>
-        /// <returns>Whether loading was successful.</returns>
-        public bool LoadSave(int saveIndex)
-        {
-            var success = Settings.FilesHandler.TryLoad(saveIndex, out var data);
-            if (success) Settings.SerializationProvider.Deserialize(data);
+  /// <summary>
+  /// Overrides the content of a save file. Will not create a new file, if there is no matching one to override.
+  /// </summary>
+  /// <param name="saveIndex">The save's index (NOTE: this is not the index of the file
+  /// in the system. Instead it indicates that this is the n-th file created. The index
+  /// will be the prefix of the file's name)</param>
+  /// <param name="preamble">The file's preamble, that contains information that can be quickly
+  /// read, for example save's in-game name.</param>
+  public void OverrideSave(int saveIndex, string preamble = "") =>
+    Settings.FilesHandler.Override(saveIndex, Settings.SerializationProvider.Serialize(preamble));
 
-            return success;
-        }
+  /// <summary>
+  /// Loads the correct save file and injects loaded data into subscribers, through their
+  /// 'GetDataFromCopy' methods.
+  /// </summary>
+  /// <param name="saveIndex">The save's index (NOTE: this is not the index of the file
+  /// in the system. Instead it indicates that this is the n-th file created. The index
+  /// will be the prefix of the file's name)</param>
+  /// <returns>Whether loading was successful.</returns>
+  public bool LoadSave(int saveIndex) {
+    var success = Settings.FilesHandler.TryLoad(saveIndex, out var data);
+    if (success) Settings.SerializationProvider.Deserialize(data);
 
-        /// <returns>The SaveFileData objects of all valid files in the saves directory.</returns>
-        public IList<SaveFileData> GetAllSaveFilesData() => Settings.FilesHandler.GetAllSaveFilesData();
+    return success;
+  }
 
-        /// <returns>The next free index for a save file.</returns>
-        public int GetNextSaveIndex() => Settings.FilesHandler.GetNextSaveIndex();
+  /// <returns>The SaveFileData objects of all valid files in the saves directory.</returns>
+  public IList<SaveFileData> GetAllSaveFilesData() => Settings.FilesHandler.GetAllSaveFilesData();
 
-        /// <summary>
-        /// Attempts to delete a save file.
-        /// </summary>
-        /// <param name="saveIndex">The save's index (NOTE: this is not the index of the file
-        /// in the system. Instead it indicates that this is the n-th file created. The index
-        /// will be the prefix of the file's name)</param>
-        /// <returns>Whether the save file was successfully deleted</returns>
-        public bool DeleteSave(int saveIndex) => Settings.FilesHandler.Delete(saveIndex);
-    }
+  /// <returns>The next free index for a save file.</returns>
+  public int GetNextSaveIndex() => Settings.FilesHandler.GetNextSaveIndex();
+
+  /// <summary>
+  /// Attempts to delete a save file.
+  /// </summary>
+  /// <param name="saveIndex">The save's index (NOTE: this is not the index of the file
+  /// in the system. Instead it indicates that this is the n-th file created. The index
+  /// will be the prefix of the file's name)</param>
+  /// <returns>Whether the save file was successfully deleted</returns>
+  public bool DeleteSave(int saveIndex) => Settings.FilesHandler.Delete(saveIndex);
+}
 }

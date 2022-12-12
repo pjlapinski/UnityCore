@@ -3,63 +3,84 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace PJL.Collections
-{
-    [Serializable]
-    public class HashMap<TKey, TValue> : 
-        IEnumerable<KeyValuePair<TKey, TValue>>
-    {
-        [SerializeField, Tooltip("Initial values, runtime values will not be shown in the editor.")] 
-        private KeyValue<TKey, TValue>[] _initialValues;
-        public Dictionary<TKey, TValue> Dictionary { get; private set; }
+namespace PJL.Collections {
+[Serializable]
+public class HashMap<TKey, TValue> :
+  IEnumerable<KeyValuePair<TKey, TValue>> {
+  [SerializeField, Tooltip("Initial values, runtime values will not be shown in the editor.")]
+  private KeyValue<TKey, TValue>[] _initialValues;
 
-        /// <summary>
-        /// Inserts the initial values into the underlying dictionary
-        /// </summary>
-        public void Initialize()
-        {
-            foreach (var (key, value) in _initialValues) Dictionary[key] = value;
-            _initialValues = Array.Empty<KeyValue<TKey, TValue>>();
-        }
+  public Dictionary<TKey, TValue> Dictionary { get; private set; }
 
-        #region Dictionary
+  /// <summary>
+  /// Inserts the initial values into the underlying dictionary
+  /// </summary>
+  public void Initialize() {
+    foreach (var (key, value) in _initialValues) Dictionary[key] = value;
+    _initialValues = Array.Empty<KeyValue<TKey, TValue>>();
+  }
 
-        public IEqualityComparer<TKey> Comparer => Dictionary.Comparer;
-        public int Count => Dictionary.Count;
-        public TValue this[TKey key]
-        {
-            get => Dictionary[key];
-            set => Dictionary[key] = value;
-        }
+#region Dictionary
 
-        public Dictionary<TKey, TValue>.KeyCollection Keys => Dictionary.Keys;
-        public Dictionary<TKey, TValue>.ValueCollection Values => Dictionary.Values;
+  public IEqualityComparer<TKey> Comparer => Dictionary.Comparer;
+  public int Count => Dictionary.Count;
 
-        public void Add(TKey key, TValue value) => Dictionary.Add(key, value);
-        public void Clear() => Dictionary.Clear();
-        public bool ContainsKey(TKey key) => Dictionary.ContainsKey(key);
-        public bool ContainsValue(TValue value) => Dictionary.ContainsValue(value);
-        public int EnsureCapacity(int capacity) => Dictionary.EnsureCapacity(capacity);
-        public bool Remove(TKey key) => Dictionary.Remove(key);
-        public bool Remove(TKey key, out TValue value) => Dictionary.Remove(key, out value);
-        public void TrimExcess() => Dictionary.TrimExcess();
-        public void TrimExcess(int capacity) => Dictionary.TrimExcess(capacity);
-        public bool TryAdd(TKey key, TValue value) => Dictionary.TryAdd(key, value);
-        public bool TryGetValue(TKey key, out TValue value) => Dictionary.TryGetValue(key, out value);
+  public TValue this[TKey key] {
+    get => Dictionary[key];
+    set => Dictionary[key] = value;
+  }
 
-        public HashMap() => Dictionary = new();
-        public HashMap(IDictionary<TKey, TValue> dictionary) => Dictionary = new(dictionary);
-        public HashMap(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey> comparer) => Dictionary = new(dictionary, comparer);
-        public HashMap(IEnumerable<KeyValuePair<TKey, TValue>> pairs) => Dictionary = new(pairs);
-        public HashMap(IEnumerable<KeyValuePair<TKey, TValue>> pairs, IEqualityComparer<TKey> comparer) => Dictionary = new(pairs, comparer);
-        public HashMap(IEqualityComparer<TKey> comparer) => Dictionary = new(comparer);
-        public HashMap(int capacity) => Dictionary = new(capacity);
-        public HashMap(int capacity, IEqualityComparer<TKey> comparer) => Dictionary = new(capacity, comparer);
+  public Dictionary<TKey, TValue>.KeyCollection Keys => Dictionary.Keys;
+  public Dictionary<TKey, TValue>.ValueCollection Values => Dictionary.Values;
 
-        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => Dictionary.GetEnumerator();
+  public void Add(TKey key, TValue value) => Dictionary.Add(key, value);
+  public void Clear() => Dictionary.Clear();
+  public bool ContainsKey(TKey key) => Dictionary.ContainsKey(key);
+  public bool ContainsValue(TValue value) => Dictionary.ContainsValue(value);
+  public int EnsureCapacity(int capacity) => Dictionary.EnsureCapacity(capacity);
+  public bool Remove(TKey key) => Dictionary.Remove(key);
+  public bool Remove(TKey key, out TValue value) => Dictionary.Remove(key, out value);
+  public void TrimExcess() => Dictionary.TrimExcess();
+  public void TrimExcess(int capacity) => Dictionary.TrimExcess(capacity);
+  public bool TryAdd(TKey key, TValue value) => Dictionary.TryAdd(key, value);
+  public bool TryGetValue(TKey key, out TValue value) => Dictionary.TryGetValue(key, out value);
 
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+  public HashMap() {
+    Dictionary = new Dictionary<TKey, TValue>();
+  }
 
-        #endregion
-    }
+  public HashMap(IDictionary<TKey, TValue> dictionary) {
+    Dictionary = new Dictionary<TKey, TValue>(dictionary);
+  }
+
+  public HashMap(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey> comparer) {
+    Dictionary = new Dictionary<TKey, TValue>(dictionary, comparer);
+  }
+
+  public HashMap(IEnumerable<KeyValuePair<TKey, TValue>> pairs) {
+    Dictionary = new Dictionary<TKey, TValue>(pairs);
+  }
+
+  public HashMap(IEnumerable<KeyValuePair<TKey, TValue>> pairs, IEqualityComparer<TKey> comparer) {
+    Dictionary = new Dictionary<TKey, TValue>(pairs, comparer);
+  }
+
+  public HashMap(IEqualityComparer<TKey> comparer) {
+    Dictionary = new Dictionary<TKey, TValue>(comparer);
+  }
+
+  public HashMap(int capacity) {
+    Dictionary = new Dictionary<TKey, TValue>(capacity);
+  }
+
+  public HashMap(int capacity, IEqualityComparer<TKey> comparer) {
+    Dictionary = new Dictionary<TKey, TValue>(capacity, comparer);
+  }
+
+  public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => Dictionary.GetEnumerator();
+
+  IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+#endregion
+}
 }

@@ -3,22 +3,25 @@ using UnityEngine;
 using UnityEngine.Localization;
 using XNode;
 
-namespace PJL.DialogueSystem
-{
-    public class InConditionalNode : BaseDialogueNode, IConditionalNode
-    {
-        public override LocalizedString Text => _textOptions[Graph.PathSelectors[_textSelector].Invoke()];
+namespace PJL.DialogueSystem {
+public class InConditionalNode : BaseDialogueNode, IConditionalNode {
+  public override LocalizedString Text => _textOptions[Graph.PathSelectors[_textSelector].Invoke()];
 
-        [SerializeField] private LocalizedString[] _textOptions;
-        [SerializeField, Dropdown(nameof(PathSelectors))] private string _textSelector;
-        [Output(connectionType = ConnectionType.Override), SerializeField] private Empty _out;
+  [SerializeField] private LocalizedString[] _textOptions;
 
-        public override object GetValue(NodePort port) => _out;
+  [SerializeField, Dropdown(nameof(PathSelectors))]
+  private string _textSelector;
 
-        internal override BaseDialogueNode GetNextNode() => GetOutputPort(nameof(_out))?.Connection?.node as BaseDialogueNode;
+  [Output(connectionType = ConnectionType.Override), SerializeField]
+  private Empty _out;
 
-        internal override BaseDialogueNode GetExitNode(ushort path) => GetNextNode();
+  public override object GetValue(NodePort port) => _out;
 
-        private DropdownList<string> PathSelectors => IConditionalNode.GetPathSelectors(Graph);
-    }
+  internal override BaseDialogueNode GetNextNode() =>
+    GetOutputPort(nameof(_out))?.Connection?.node as BaseDialogueNode;
+
+  internal override BaseDialogueNode GetExitNode(ushort path) => GetNextNode();
+
+  private DropdownList<string> PathSelectors => IConditionalNode.GetPathSelectors(Graph);
+}
 }
