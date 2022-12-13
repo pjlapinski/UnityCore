@@ -7,7 +7,7 @@ namespace PJL.Collections {
 [Serializable]
 public class HashMap<TKey, TValue> :
   IEnumerable<KeyValuePair<TKey, TValue>> {
-  [SerializeField, Tooltip("Initial values, runtime values will not be shown in the editor.")]
+  [SerializeField]
   private KeyValue<TKey, TValue>[] _initialValues;
 
   public Dictionary<TKey, TValue> Dictionary { get; private set; }

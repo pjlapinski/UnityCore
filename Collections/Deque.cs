@@ -7,7 +7,7 @@ namespace PJL.Collections {
 [Serializable]
 public class Deque<T> :
   IEnumerable<T> {
-  [SerializeField, Tooltip("Initial values, runtime values will not be shown in the editor.")]
+  [SerializeField]
   private T[] _initialValues;
 
   public LinkedList<T> LinkedList { get; private set; }
