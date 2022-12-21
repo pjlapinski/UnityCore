@@ -9,6 +9,7 @@ public class HashMap<TKey, TValue> :
   IEnumerable<KeyValuePair<TKey, TValue>> {
   [SerializeField]
   private KeyValue<TKey, TValue>[] _initialValues;
+  private bool _initialized;
 
   public Dictionary<TKey, TValue> Dictionary { get; private set; }
 
@@ -16,9 +17,27 @@ public class HashMap<TKey, TValue> :
   /// Inserts the initial values into the underlying dictionary
   /// </summary>
   public void Initialize() {
+    if (_initialized) return;
+    _initialized = true;
     foreach (var (key, value) in _initialValues) Dictionary[key] = value;
     _initialValues = Array.Empty<KeyValue<TKey, TValue>>();
   }
+
+#if UNITY_EDITOR
+
+  /// <summary>
+  /// Moves all values added to the actual dictionary into the initial values. Useful when using the collection in in-editor scripts
+  /// </summary>
+  public void MoveValuesToInitial() {
+    var size = Dictionary.Count;
+    _initialValues = new KeyValue<TKey, TValue>[size];
+    var i = 0;
+    foreach (var kvp in Dictionary) {
+      _initialValues[i++] = kvp;
+    }
+  }
+
+#endif
 
 #region Dictionary
 

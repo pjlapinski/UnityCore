@@ -9,6 +9,7 @@ public class Deque<T> :
   IEnumerable<T> {
   [SerializeField]
   private T[] _initialValues;
+  private bool _initialized;
 
   public LinkedList<T> LinkedList { get; private set; }
 
@@ -16,9 +17,27 @@ public class Deque<T> :
   /// Inserts the initial values into the underlying dictionary
   /// </summary>
   public void Initialize() {
+    if (_initialized) return;
+    _initialized = true;
     foreach (var value in _initialValues) LinkedList.AddLast(value);
     _initialValues = Array.Empty<T>();
   }
+
+#if UNITY_EDITOR
+
+  /// <summary>
+  /// Moves all values added to the actual linked list into the initial values. Useful when using the collection in in-editor scripts
+  /// </summary>
+  public void MoveValuesToInitial() {
+    var size = LinkedList.Count;
+    _initialValues = new T[size];
+    var i = 0;
+    foreach (var value in LinkedList) {
+      _initialValues[i++] = value;
+    }
+  }
+
+#endif
 
   public int Count => LinkedList.Count;
 
