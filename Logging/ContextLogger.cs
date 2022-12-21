@@ -46,11 +46,10 @@ public static class ContextLogger {
 
       var coloredInsertions = insertions
         .Select(insertion =>
-          $"{HtmlColorPrefix}{FormatInsertionColorHex}>{insertion}{HtmlColorSuffix}")
+          SanitizeText($"{HtmlColorPrefix}{FormatInsertionColorHex}>{insertion}{HtmlColorSuffix}"))
         .OfType<object>()
         .ToArray();
       StringBuilder.Append(format);
-      SanitizeStringBuilder();
       Debug.LogFormat(StringBuilder.ToString(), coloredInsertions);
     }
     finally {
@@ -70,28 +69,24 @@ public static class ContextLogger {
 
       var coloredInsertions = insertions
         .Select(insertion =>
-          $"{HtmlColorPrefix}{FormatInsertionColorHex}>{insertion}{HtmlColorSuffix}")
+          SanitizeText($"{HtmlColorPrefix}{FormatInsertionColorHex}>{insertion}{HtmlColorSuffix}"))
         .OfType<object>()
         .ToArray();
       switch (severity) {
         case Severity.Message when ActiveLogLevels.Contains(Severity.Message):
           StringBuilder.Append(format);
-          SanitizeStringBuilder();
           Debug.LogFormat(StringBuilder.ToString(), coloredInsertions);
           break;
         case Severity.Error when ActiveLogLevels.Contains(Severity.Error):
           GenerateColoredText(SeverityColors[severity], format);
-          SanitizeStringBuilder();
           Debug.LogErrorFormat(StringBuilder.ToString(), coloredInsertions);
           break;
         case Severity.Assertion when ActiveLogLevels.Contains(Severity.Assertion):
           GenerateColoredText(SeverityColors[severity], format);
-          SanitizeStringBuilder();
           Debug.LogAssertionFormat(StringBuilder.ToString(), coloredInsertions);
           break;
         case Severity.Warning when ActiveLogLevels.Contains(Severity.Warning):
           GenerateColoredText(SeverityColors[severity], format);
-          SanitizeStringBuilder();
           Debug.LogWarningFormat(StringBuilder.ToString(), coloredInsertions);
           break;
         default:
@@ -114,8 +109,6 @@ public static class ContextLogger {
   private static void GenerateColoredText(Color color, string text) =>
     GenerateColoredText(ColorUtility.ToHtmlStringRGB(color), text);
 
-  private static void SanitizeStringBuilder() {
-    StringBuilder.Replace("{", "{{").Replace("}", "}}");
-  }
+  private static string SanitizeText(string text) => text.Replace("{", "{{").Replace("}", "}}");
 }
 }
