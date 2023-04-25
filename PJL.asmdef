@@ -1,10 +1,10 @@
 {
-	"name": "PJL",
-    "rootNamespace": "PJL",
-    "references": [
-        "XNode",
-        "NaughtyAttributes.Core",
-        "Unity.InputSystem",
-        "Unity.Localization"
-    ]
+  "name": "PJL",
+  "rootNamespace": "PJL",
+  "references": [
+    "XNode",
+    "NaughtyAttributes.Core",
+    "Unity.InputSystem",
+    "Unity.Localization"
+  ]
 }
