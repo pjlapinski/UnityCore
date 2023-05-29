@@ -6,33 +6,50 @@ namespace PJL.Patterns
     [Serializable]
     public struct Option<T>
     {
-        [field: SerializeField] public bool IsNone { get; private set; }
+        [SerializeField] private bool _isNone;
         [SerializeField] private T _value;
 
-        public static Option<T> None => new() {IsNone = true, _value = default};
+        public bool IsNone
+        {
+            get => _isNone || _value == null;
+            private set
+            {
+                _isNone = value;
+                if (value) _value = default;
+            }
+        }
+
+        public static Option<T> None => new() {_isNone = true, _value = default};
 
         public void Match(Action ifNone, Action<T> ifSome)
         {
-            if (IsNone || _value == null) ifNone();
+            if (IsNone) ifNone();
             else ifSome(_value);
         }
 
-        public void SetNone()
+        public bool TryUnwrap(out T value)
         {
-            IsNone = true;
-            _value = default;
+            if (IsNone)
+            {
+                value = default;
+                return false;
+            }
+
+            value = _value;
+            return true;
         }
+
+        public void SetNone() => IsNone = true;
 
         public void SetValue(T value)
         {
             if (value == null)
             {
-                IsNone = true;
-                _value = default;
+                SetNone();
             }
             else
             {
-                IsNone = false;
+                _isNone = false;
                 _value = value;
             }
         }
@@ -43,7 +60,7 @@ namespace PJL.Patterns
 
             return new Option<T>
             {
-                IsNone = false,
+                _isNone = false,
                 _value = value,
             };
         }
