@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace PJL.Globals
+namespace PJL.Core
 {
+    /// <summary>
+    /// Statically registered objects, accessible by everyone and available to be injected
+    /// </summary>
     public class GameGlobals : MonoBehaviour
     {
         private Dictionary<Type, object> _globals;
@@ -46,5 +49,8 @@ namespace PJL.Globals
 
         public static object Get(Type type) => TryGet(type, out var inst) ? inst : default;
         public static T Get<T>() => (T) Get(typeof(T));
+
+        public static void Remove(Type type) => Instance._globals.Remove(type);
+        public static void Remove<T>() => Remove(typeof(T));
     }
 }
