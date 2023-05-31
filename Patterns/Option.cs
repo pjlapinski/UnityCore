@@ -20,6 +20,7 @@ namespace PJL.Patterns
         }
 
         public static Option<T> None => new() {_isNone = true, _value = default};
+        public static Option<T> From(T value) => value == null ? None : new() {_isNone = false, _value = value};
 
         public void Match(Action ifNone, Action<T> ifSome)
         {
@@ -54,15 +55,6 @@ namespace PJL.Patterns
             }
         }
 
-        public static implicit operator Option<T>(T value)
-        {
-            if (value == null) return None;
-
-            return new Option<T>
-            {
-                _isNone = false,
-                _value = value,
-            };
-        }
+        public static implicit operator Option<T>(T value) => From(value);
     }
 }

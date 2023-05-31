@@ -21,7 +21,7 @@ namespace PJL.Core
                     var found = FindObjectOfType<GameGlobals>();
                     if (found == null)
                     {
-                        var go = new GameObject { name = "GlobalServices" };
+                        var go = new GameObject { name = nameof(GameGlobals) };
                         go.transform.SetSiblingIndex(0);
                         found = go.AddComponent<GameGlobals>();
                     }
