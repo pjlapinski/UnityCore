@@ -24,8 +24,7 @@ namespace PJL.Core
             {
                 if (field.GetCustomAttributes(typeof(FromGameGlobalsAttribute)).Any())
                 {
-                    var value = GameGlobals.Get(field.FieldType);
-                    if (value == null)
+                    if (!GameGlobals.TryGet(field.FieldType, out var value))
                         throw new NullReferenceException($"Object of type {thisType} tried to extract <{field.FieldType}> from GameGlobals, but it was null.");
                     field.SetValue(this, value);
                 }
@@ -45,9 +44,9 @@ namespace PJL.Core
                 var args = new object[initParams.Length];
                 for (var i = 0; i < args.Length; i++)
                 {
-                    args[i] = GameGlobals.Get(initParams[i].ParameterType);
-                    if (args[i] == null)
+                    if (!GameGlobals.TryGet(initParams[i].ParameterType, out var value))
                         throw new NullReferenceException($"Object of type {thisType} tried to extract <{initParams[i].ParameterType}> from GameGlobals in its init method, but it was null.");
+                    args[i] = value;
                 }
                 
                 method.Invoke(this, args);

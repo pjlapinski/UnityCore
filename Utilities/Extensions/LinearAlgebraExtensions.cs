@@ -51,5 +51,9 @@ namespace PJL.Utilities.Extensions
 
         public static Vector4 Vector4(this Quaternion quaternion) =>
             new(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
+
+        public static Vector2 ClampedToNormalized(this Vector2 vector) => vector.sqrMagnitude > 1 ? vector.normalized : vector;
+        public static Vector3 ClampedToNormalized(this Vector3 vector) => vector.sqrMagnitude > 1 ? vector.normalized : vector;
+        public static Vector4 ClampedToNormalized(this Vector4 vector) => vector.sqrMagnitude > 1 ? vector.normalized : vector;
     }
 }
