@@ -2,210 +2,191 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace PJL.Utilities.Extensions
-{
-    public static class EnumerableExtensions
-    {
-        private static Random s_rng = new();
+namespace PJL.Utilities.Extensions {
+public static class EnumerableExtensions {
+    private static Random s_rng = new();
 
-        public static void InitializeSeed(int seed) => s_rng = new Random(seed);
+    public static void InitializeSeed(int seed) => s_rng = new Random(seed);
 
-#region Deconstruction
+    #region Deconstruction
 
-        public static void Deconstruct<TKey, TValue>(this KeyValuePair<TKey, TValue> kvp, out TKey key,
-            out TValue value)
-        {
-            key = kvp.Key;
-            value = kvp.Value;
-        }
+    public static void Deconstruct<TKey, TValue>(this KeyValuePair<TKey, TValue> kvp, out TKey key, out TValue value) {
+        key = kvp.Key;
+        value = kvp.Value;
+    }
 
-#endregion
+    #endregion
 
-#region Visit
+    #region Flatten
 
-        public static IEnumerable<TSource> Visit<TSource>(this IEnumerable<TSource> source, Action<TSource> action)
-        {
-            foreach (var element in source)
-                action(element);
+    public static IEnumerable<T> Flatten<T>(this IEnumerable<IEnumerable<T>> source) => source.SelectMany(e => e);
 
-            return source;
-        }
+    #endregion
 
-        public static IEnumerable<TSource> Visit<TSource, TResult>(this IEnumerable<TSource> source,
-            Func<TSource, TResult> func)
-        {
-            foreach (var element in source)
-                func(element);
+    #region All
 
-            return source;
-        }
+    public static bool All(this IEnumerable<bool> source) => source.All(b => b);
 
-        public static IEnumerable<TSource> Visit<TSource>(this IList<TSource> source, Action<TSource> func)
-        {
-            for (var i = 0; i < source.Count; i++)
-                func(source[i]);
+    #endregion
 
-            return source;
-        }
+    #region Empty
 
-        public static IEnumerable<TSource>
-            Visit<TSource, TResult>(this IList<TSource> source, Func<TSource, TResult> func)
-        {
-            for (var i = 0; i < source.Count; i++)
-                func(source[i]);
+    public static bool Empty<T>(this IEnumerable<T> source) => !source.Any();
 
-            return source;
-        }
+    #endregion
 
-        public static IEnumerable<TSource> Visit<TSource>(this IList<TSource> source, Action<TSource, int> func)
-        {
-            for (var i = 0; i < source.Count; i++)
-                func(source[i], i);
+    #region Visit
 
-            return source;
-        }
+    public static IEnumerable<TSource> Visit<TSource>(this IEnumerable<TSource> source, Action<TSource> action) {
+        foreach (var element in source)
+            action(element);
 
-        public static IEnumerable<TSource> Visit<TSource, TResult>(this IList<TSource> source,
-            Func<TSource, int, TResult> func)
-        {
-            for (var i = 0; i < source.Count; i++)
-                func(source[i], i);
+        return source;
+    }
 
-            return source;
-        }
+    public static IEnumerable<TSource> Visit<TSource, TResult>(
+        this IEnumerable<TSource> source,
+        Func<TSource, TResult> func
+    ) {
+        foreach (var element in source)
+            func(element);
 
-#endregion
+        return source;
+    }
 
-#region Shuffle
+    public static IEnumerable<TSource> Visit<TSource>(this IList<TSource> source, Action<TSource> func) {
+        for (var i = 0; i < source.Count; i++)
+            func(source[i]);
 
-        public static IEnumerable<TSource> Shuffle<TSource>(this IEnumerable<TSource> source) =>
-            source.OrderBy(_ => s_rng.NextDouble());
+        return source;
+    }
 
-        public static IEnumerable<TSource> Shuffle<TSource>(this IEnumerable<TSource> source, int seed)
-        {
-            var rng = new Random(seed);
-            return source.OrderBy(_ => rng.NextDouble());
-        }
+    public static IEnumerable<TSource>
+        Visit<TSource, TResult>(this IList<TSource> source, Func<TSource, TResult> func) {
+        for (var i = 0; i < source.Count; i++)
+            func(source[i]);
 
-#endregion
+        return source;
+    }
 
-#region TakeRandom
+    public static IEnumerable<TSource> Visit<TSource>(this IList<TSource> source, Action<TSource, int> func) {
+        for (var i = 0; i < source.Count; i++)
+            func(source[i], i);
 
-        public static IEnumerable<TSource> TakeRandom<TSource>(this IEnumerable<TSource> source, int amount) =>
-            source.Shuffle().Take(amount);
+        return source;
+    }
 
-        public static IEnumerable<TSource>
-            TakeRandom<TSource>(this IEnumerable<TSource> source, int amount, int seed) =>
-            source.Shuffle(seed).Take(amount);
+    public static IEnumerable<TSource> Visit<TSource, TResult>(this IList<TSource> source, Func<TSource, int, TResult> func) {
+        for (var i = 0; i < source.Count; i++)
+            func(source[i], i);
 
-        public static TSource RandomOrDefault<TSource>(this IEnumerable<TSource> source) =>
-            source.Shuffle().FirstOrDefault();
+        return source;
+    }
 
-        public static TSource RandomOrDefault<TSource>(this IEnumerable<TSource> source, int seed) =>
-            source.Shuffle(seed).FirstOrDefault();
+    #endregion
 
-        public static TSource
-            RandomOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate) =>
-            source.Shuffle().FirstOrDefault(predicate);
+    #region Shuffle
 
-        public static TSource RandomOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate,
-            int seed) =>
-            source.Shuffle(seed).FirstOrDefault(predicate);
+    public static IEnumerable<TSource> Shuffle<TSource>(this IEnumerable<TSource> source) => source.OrderBy(_ => s_rng.NextDouble());
 
-#endregion
+    public static IEnumerable<TSource> Shuffle<TSource>(this IEnumerable<TSource> source, int seed) {
+        var rng = new Random(seed);
+        return source.OrderBy(_ => rng.NextDouble());
+    }
 
-#region Zip
+    #endregion
 
-        public static IEnumerable<(TFirst, TSecond)> Zip<TFirst, TSecond>(this IEnumerable<TFirst> source,
-            IEnumerable<TSecond> other) => source.Zip(other, (first, second) => (first, second));
+    #region TakeRandom
 
-        public static IEnumerable<(T Value, int Index)> ZipWithIndex<T>(this IEnumerable<T> source) =>
-            source.Select((el, idx) => (el, idx));
+    public static IEnumerable<TSource> TakeRandom<TSource>(this IEnumerable<TSource> source, int amount) =>
+        source.Shuffle().Take(amount);
 
-#endregion
+    public static IEnumerable<TSource>
+        TakeRandom<TSource>(this IEnumerable<TSource> source, int amount, int seed) =>
+        source.Shuffle(seed).Take(amount);
 
-#region Flatten
+    public static TSource RandomOrDefault<TSource>(this IEnumerable<TSource> source) =>
+        source.Shuffle().FirstOrDefault();
 
-        public static IEnumerable<T> Flatten<T>(this IEnumerable<IEnumerable<T>> source) => source.SelectMany(e => e);
+    public static TSource RandomOrDefault<TSource>(this IEnumerable<TSource> source, int seed) =>
+        source.Shuffle(seed).FirstOrDefault();
 
-#endregion
+    public static TSource
+        RandomOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate) =>
+        source.Shuffle().FirstOrDefault(predicate);
 
-#region All
+    public static TSource RandomOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate, int seed) =>
+        source.Shuffle(seed).FirstOrDefault(predicate);
 
-        public static bool All(this IEnumerable<bool> source) => source.All(b => b);
+    #endregion
 
-#endregion
+    #region Zip
 
-#region IndexOf
+    public static IEnumerable<(TFirst, TSecond)> Zip<TFirst, TSecond>(this IEnumerable<TFirst> source, IEnumerable<TSecond> other) =>
+        source.Zip(other, (first, second) => (first, second));
 
-        public static int IndexOf<T>(this IList<T> source, T element)
-        {
-            for (var i = 0; i < source.Count; i++)
-                if (source[i].Equals(element))
-                    return i;
-            return -1;
-        }
+    public static IEnumerable<(T Value, int Index)> ZipWithIndex<T>(this IEnumerable<T> source) => source.Select((el, idx) => (el, idx));
 
-        public static int LastIndexOf<T>(this IList<T> source, T element)
-        {
-            for (var i = source.Count - 1; i >= 0; i++)
-                if (source[i].Equals(element))
-                    return i;
-            return -1;
-        }
+    #endregion
 
-        public static int FindIndexOf<T>(this IList<T> source, Func<T, bool> predicate)
-        {
-            for (var i = 0; i < source.Count; i++)
-                if (predicate(source[i]))
-                    return i;
-            return -1;
-        }
+    #region IndexOf
 
-        public static int FindLastIndexOf<T>(this IList<T> source, Func<T, bool> predicate)
-        {
-            for (var i = source.Count - 1; i >= 0; i++)
-                if (predicate(source[i]))
-                    return i;
-            return -1;
-        }
+    public static int IndexOf<T>(this IList<T> source, T element) {
+        for (var i = 0; i < source.Count; i++)
+            if (source[i].Equals(element))
+                return i;
+        return -1;
+    }
 
-        public static int FindIndexOfMax<T>(this IList<T> source) =>
-            source.ZipWithIndex().MaxBy(item => item.Value).Index;
+    public static int LastIndexOf<T>(this IList<T> source, T element) {
+        for (var i = source.Count - 1; i >= 0; i++)
+            if (source[i].Equals(element))
+                return i;
+        return -1;
+    }
 
-        public static int FindIndexOfMin<T>(this IList<T> source) =>
-            source.ZipWithIndex().MinBy(item => item.Value).Index;
+    public static int FindIndexOf<T>(this IList<T> source, Func<T, bool> predicate) {
+        for (var i = 0; i < source.Count; i++)
+            if (predicate(source[i]))
+                return i;
+        return -1;
+    }
 
-#endregion
+    public static int FindLastIndexOf<T>(this IList<T> source, Func<T, bool> predicate) {
+        for (var i = source.Count - 1; i >= 0; i++)
+            if (predicate(source[i]))
+                return i;
+        return -1;
+    }
 
-#region MaxBy | MinBy
+    public static int FindIndexOfMax<T>(this IList<T> source) => source.ZipWithIndex().MaxBy(item => item.Value).Index;
 
-        public static TSource MinBy<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, TResult> func) =>
-            source.OrderBy(func).First();
+    public static int FindIndexOfMin<T>(this IList<T> source) => source.ZipWithIndex().MinBy(item => item.Value).Index;
 
-        public static TSource MaxBy<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, TResult> func) =>
-            source.OrderByDescending(func).First();
+    #endregion
 
-#endregion
+    #region MaxBy | MinBy
 
-#region Empty
+    public static TSource MinBy<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, TResult> func) =>
+        source.OrderBy(func).First();
 
-        public static bool Empty<T>(this IEnumerable<T> source) => !source.Any();
+    public static TSource MaxBy<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, TResult> func) =>
+        source.OrderByDescending(func).First();
 
-#endregion
+    #endregion
 
-#region Rotate
+    #region Rotate
 
-        public static IEnumerable<TSource> RotateLeft<TSource>(this IEnumerable<TSource> source, int count) => source
+    public static IEnumerable<TSource> RotateLeft<TSource>(this IEnumerable<TSource> source, int count) =>
+        source
             .Skip(count)
             .Concat(source.Take(count));
 
-        public static IEnumerable<TSource> RotateRight<TSource>(this IEnumerable<TSource> source, int count)
-        {
-            var sourceCount = source.Count();
-            return source.Skip(sourceCount - count).Concat(source.Take(sourceCount - count));
-        }
-
-#endregion
+    public static IEnumerable<TSource> RotateRight<TSource>(this IEnumerable<TSource> source, int count) {
+        var sourceCount = source.Count();
+        return source.Skip(sourceCount - count).Concat(source.Take(sourceCount - count));
     }
+
+    #endregion
+}
 }
