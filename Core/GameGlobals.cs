@@ -28,6 +28,8 @@ public class GameGlobals : MonoBehaviour {
         }
     }
 
+    public static void Register(Type type, object instance) => Instance._globals[type] = instance;
+
     public static void Register<T>(T instance) => Instance._globals[typeof(T)] = instance;
 
     public static bool TryGet(Type type, out object instance) => Instance._globals.TryGetValue(type, out instance);

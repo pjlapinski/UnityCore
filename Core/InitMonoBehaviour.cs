@@ -7,9 +7,9 @@ namespace PJL.Core {
 /// <summary>
 ///     MonoBehaviour with dependency injection capabilities
 /// </summary>
-public abstract class InitMonoBehaviour<T> : MonoBehaviour where T : InitMonoBehaviour<T> {
+public abstract class InitMonoBehaviour : MonoBehaviour {
     protected virtual void Start() {
-        var type = typeof(T);
+        var type = GetType();
 
         InjectGlobalsAndGameObject(type);
         RunInit(type);

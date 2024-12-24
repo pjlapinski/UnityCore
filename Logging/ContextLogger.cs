@@ -37,7 +37,8 @@ public static class ContextLogger {
     public static void TestLogFormat(string context, string format, params object[] insertions) {
 #if UNITY_EDITOR
         try {
-            GenerateColoredText(SeverityColors[Severity.Message], $"[{context}]");
+            var time = DateTime.Now.ToString("HH:mm:ss");
+            GenerateColoredText(SeverityColors[Severity.Message], $"[{time} -- {context}]");
             StringBuilder.Append(' ');
 
             var coloredInsertions = insertions
@@ -63,7 +64,8 @@ public static class ContextLogger {
     public static void LogFormat(Severity severity, string context, string format, params object[] insertions) {
         if (!ActiveLogLevels.Contains(severity)) return;
         try {
-            GenerateColoredText(SeverityColors[severity], $"[{context}]");
+            var time = DateTime.Now.ToString("HH:mm:ss");
+            GenerateColoredText(SeverityColors[Severity.Message], $"[{time} -- {context}]");
             StringBuilder.Append(' ');
 
             var coloredInsertions = insertions

@@ -57,6 +57,21 @@ public class SavesManager {
     public void OverrideSave(int saveIndex, string preamble = "") => Settings.FilesHandler.Override(saveIndex, Settings.SerializationProvider.Serialize(preamble));
 
     /// <summary>
+    ///     Creates a new save file based on all subscribed items and uses the specified save index. If the save
+    ///     already exists, it is overriden
+    /// </summary>
+    /// <param name="saveIndex">
+    ///     The save's index (NOTE: this is not the index of the file
+    ///     in the system. Instead it indicates that this is the n-th file created. The index
+    ///     will be the prefix of the file's name)
+    /// </param>
+    /// <param name="preamble">
+    ///     The file's preamble, that contains information that can be quickly
+    ///     read, for example save's in-game name.
+    /// </param>
+    public void CreateOrOverrideSave(int saveIndex, string preamble = "") => Settings.FilesHandler.Save(saveIndex, Settings.SerializationProvider.Serialize(preamble));
+
+    /// <summary>
     ///     Loads the correct save file and injects loaded data into subscribers, through their
     ///     'GetDataFromCopy' methods.
     /// </summary>

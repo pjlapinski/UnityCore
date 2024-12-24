@@ -10,6 +10,7 @@ public interface IFilesHandler {
     SaveFileData GetSaveFileData(int saveIndex);
     IList<SaveFileData> GetAllSaveFilesData();
     void Save(string data);
+    void Save(int saveIndex, string data);
     void Override(int saveIndex, string data);
     bool TryLoad(int saveIndex, out string data);
     bool Delete(int saveIndex);

@@ -71,6 +71,11 @@ public class SaveFilesHandler : IFilesHandler {
 
     public void Save(string data) { SaveToIndex(GetNextSaveIndex(), data); }
 
+    public void Save(int saveIndex, string data) {
+        Delete(saveIndex);
+        SaveToIndex(GetNextSaveIndex(), data);
+    }
+
     public void Override(int saveIndex, string data) {
         if (!Delete(saveIndex)) return;
         SaveToIndex(saveIndex, data);
