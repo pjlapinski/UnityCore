@@ -1,4 +1,6 @@
 ﻿// Source: https://github.com/adammyhre/Unity-Utils/blob/master/UnityUtils/Scripts/Hotkeys/Editor/CloseWindowTab.cs
+#if UNITY_EDITOR
+
 using UnityEditor;
 using UnityEngine;
 
@@ -17,3 +19,4 @@ public static class CloseWindowTab {
         editorWindow.Close();
     }
 }
+#endif

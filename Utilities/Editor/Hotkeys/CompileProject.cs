@@ -1,4 +1,5 @@
 ﻿// Source: https://github.com/adammyhre/Unity-Utils/blob/master/UnityUtils/Scripts/Hotkeys/Editor/CompileProject.cs
+#if UNITY_EDITOR
 
 using UnityEditor;
 using UnityEditor.Compilation;
@@ -9,3 +10,4 @@ public static class CompileProject {
         CompilationPipeline.RequestScriptCompilation(RequestScriptCompilationOptions.CleanBuildCache);
     }
 }
+#endif

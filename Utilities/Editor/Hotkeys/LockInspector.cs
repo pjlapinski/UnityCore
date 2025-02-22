@@ -1,4 +1,5 @@
 ﻿// Source: https://github.com/adammyhre/Unity-Utils/blob/master/UnityUtils/Scripts/Hotkeys/Editor/LockInspector.cs
+#if UNITY_EDITOR
 
 using System.Reflection;
 using UnityEditor;
@@ -50,3 +51,4 @@ public static class LockInspector {
         return ActiveEditorTracker.sharedTracker.activeEditors.Length != 0;
     }
 }
+#endif

@@ -1,4 +1,5 @@
 ﻿// Source: https://github.com/adammyhre/Unity-Utils/blob/master/UnityUtils/Scripts/Hotkeys/Editor/SaveSceneAndProject.cs
+#if UNITY_EDITOR
 
 using UnityEngine;
 using UnityEditor;
@@ -11,3 +12,4 @@ public static class SaveSceneAndProject {
         Debug.Log("Saved scene and project");
     }
 }
+#endif
