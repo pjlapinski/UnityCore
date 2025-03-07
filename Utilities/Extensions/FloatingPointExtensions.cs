@@ -23,5 +23,23 @@ public static class FloatingPointExtensions {
 
     public static bool AlmostEquals(this decimal first, decimal other) =>
         AlmostEquals(first, other, s_defaultDecimalPrecision);
+
+    public static float Remap(this float value, float minStart, float maxStart, float minEnd, float maxEnd) =>
+        minEnd + (maxEnd - minEnd) * (value - minStart) / (maxStart - minStart);
+
+    public static double Remap(this double value, double minStart, double maxStart, double minEnd, double maxEnd) =>
+        minEnd + (maxEnd - minEnd) * (value - minStart) / (maxStart - minStart);
+
+    public static decimal Remap(this decimal value, decimal minStart, decimal maxStart, decimal minEnd, decimal maxEnd) =>
+        minEnd + (maxEnd - minEnd) * (value - minStart) / (maxStart - minStart);
+
+    public static float Clamp(this float value, float min, float max) =>
+        value < min ? min : value > max ? max : value;
+
+    public static double Clamp(this double value, double min, double max) =>
+        value < min ? min : value > max ? max : value;
+
+    public static decimal Clamp(this decimal value, decimal min, decimal max) =>
+        value < min ? min : value > max ? max : value;
 }
 }
