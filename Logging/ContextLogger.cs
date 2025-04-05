@@ -29,32 +29,19 @@ public static class ContextLogger {
         Severity.Warning,
     };
 
-    public static void TestLog(object message) { TestLog("DEBUG", message); }
+    public static void TodoLog(object message) => Log(Severity.Warning, "TODO", message);
 
-    public static void TestLog(string context, object message) { TestLogFormat(context, message.ToString()); }
+    [StringFormatMethod("format")]
+    public static void TodoLogFormat(string format, params object[] insertions) => LogFormat(Severity.Warning, "TODO", format, insertions);
+
+    public static void TestLog(object message) => TestLog("DEBUG", message);
+
+    public static void TestLog(string context, object message) => TestLogFormat(context, message.ToString());
 
     [StringFormatMethod("format")]
     public static void TestLogFormat(string context, string format, params object[] insertions) {
 #if UNITY_EDITOR
-        try {
-            var time = DateTime.Now.ToString("HH:mm:ss");
-            GenerateColoredText(SeverityColors[Severity.Message], $"[{time} -- {context}]");
-            StringBuilder.Append(' ');
-
-            var coloredInsertions = insertions
-                .Select(
-                    insertion =>
-#if UNITY_EDITOR
-                        SanitizeText($"{HtmlColorPrefix}{FormatInsertionColorHex}>{insertion}{HtmlColorSuffix}")
-#else
-                        SanitizeText(insertion.ToString())
-#endif
-                )
-                .OfType<object>()
-                .ToArray();
-            StringBuilder.Append(format);
-            Debug.LogFormat(StringBuilder.ToString(), coloredInsertions);
-        } finally { StringBuilder.Clear(); }
+        LogFormat(Severity.Message, context, format, insertions);
 #endif
     }
 
