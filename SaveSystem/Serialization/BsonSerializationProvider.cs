@@ -19,19 +19,16 @@ public class BsonSerializationProvider : BaseSerializationProvider {
 #pragma warning disable 0618
         using var reader = new BsonReader(stream);
 #pragma warning restore 0618
-        var data = Serializer.Deserialize<JsonList>(reader);
+        var data = Serializer.Deserialize(reader, SaveObject.GetType());
         if (data == null) return false;
-        for (var i = 0; i < data.List.Count; ++i) {
-            Subscribers[i].LoadDataFromCopy(data.List[i]);
-            Subscribers[i].AfterDeserialization();
-        }
+        SaveObject.LoadDataFromCopy(data);
+        SaveObject.AfterDeserialization();
 
         return true;
     }
 
     public override string Serialize(string preamble) {
-        foreach (var sub in Subscribers)
-            sub.BeforeSerialization();
+        SaveObject.BeforeSerialization();
         StringBuilder.Clear();
         StringBuilder.Append(preamble);
         StringBuilder.Append('\n');
@@ -41,8 +38,7 @@ public class BsonSerializationProvider : BaseSerializationProvider {
 #pragma warning disable 0618
         using var writer = new BsonWriter(stream);
 #pragma warning restore 0618
-        var list = new JsonList { List = Subscribers, };
-        Serializer.Serialize(writer, list);
+        Serializer.Serialize(writer, SaveObject);
         StringBuilder.Append(Convert.ToBase64String(stream.ToArray()));
         return StringBuilder.ToString();
     }

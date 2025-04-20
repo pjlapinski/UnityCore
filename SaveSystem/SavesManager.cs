@@ -13,14 +13,10 @@ public class SavesManager {
     public SavesManagerSettings Settings { get; set; }
 
     /// <summary>
-    ///     Add the serializable object to this manager's pool of subscribers.
+    ///     Sets the object which will be used for serializing data.
     /// </summary>
-    public void SubscribeForSerialization(ISerializable subscriber) => Settings.SerializationProvider.SubscribeForSerialization(subscriber);
-
-    /// <summary>
-    ///     Remove the serializable object from this manager's pool of subscribers.
-    /// </summary>
-    public void UnsubscribeFromSerialization(ISerializable subscriber) => Settings.SerializationProvider.UnsubscribeFromSerialization(subscriber);
+    /// <param name="saveObject">Instance of an object which will receive the calls for serialization and deserialization.</param>
+    public void SetSaveObject(ISerializable saveObject) => Settings.SerializationProvider.SetSaveObject(saveObject);
 
     /// <summary>
     ///     Checks whether a save file corresponding to the given save index exists.

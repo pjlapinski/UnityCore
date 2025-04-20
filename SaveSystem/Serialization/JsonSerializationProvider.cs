@@ -15,26 +15,23 @@ public class JsonSerializationProvider : BaseSerializationProvider {
 
         using var sr = new StringReader(serializedText);
         using var reader = new JsonTextReader(sr);
-        var data = Serializer.Deserialize<List<ISerializable>>(reader);
+        var data = Serializer.Deserialize(reader, SaveObject.GetType());
         if (data == null) return false;
-        for (var i = 0; i < data.Count; ++i) {
-            Subscribers[i].LoadDataFromCopy(data[i]);
-            Subscribers[i].AfterDeserialization();
-        }
+        SaveObject.LoadDataFromCopy(data);
+        SaveObject.AfterDeserialization();
 
         return true;
     }
 
     public override string Serialize(string preamble) {
-        foreach (var sub in Subscribers)
-            sub.BeforeSerialization();
+        SaveObject.BeforeSerialization();
         StringBuilder.Clear();
         StringBuilder.Append(preamble);
         StringBuilder.Append('\n');
         StringBuilder.Append(PreambleSeparator);
 
         var sw = new StringWriter();
-        using (var writer = new JsonTextWriter(sw)) { Serializer.Serialize(writer, Subscribers); }
+        using (var writer = new JsonTextWriter(sw)) { Serializer.Serialize(writer, SaveObject); }
 
         StringBuilder.Append(sw);
         return StringBuilder.ToString();

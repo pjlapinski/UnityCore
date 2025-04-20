@@ -7,12 +7,12 @@ public abstract class BaseSerializationProvider : ISerializationProvider {
     protected readonly JsonSerializer Serializer;
     protected readonly StringBuilder StringBuilder;
 
-    protected readonly List<ISerializable> Subscribers;
+    protected ISerializable SaveObject;
 
     protected BaseSerializationProvider(string preambleSeparator) {
         PreambleSeparator = preambleSeparator;
         StringBuilder = new StringBuilder();
-        Subscribers = new List<ISerializable>();
+        SaveObject = null;
         Serializer = JsonSerializer.Create(
             new JsonSerializerSettings {
                 // required for serializing Unity types, like Vector3
@@ -25,9 +25,7 @@ public abstract class BaseSerializationProvider : ISerializationProvider {
 
     public string PreambleSeparator { get; }
 
-    public void SubscribeForSerialization(ISerializable subscriber) { Subscribers.Add(subscriber); }
-
-    public void UnsubscribeFromSerialization(ISerializable subscriber) { Subscribers.Remove(subscriber); }
+    public void SetSaveObject(ISerializable saveObject) => SaveObject = saveObject;
 
     public abstract bool Deserialize(string text);
     public abstract string Serialize(string preamble);
