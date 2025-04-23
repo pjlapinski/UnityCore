@@ -8,7 +8,7 @@ using UnityEditor.AddressableAssets.Settings;
 using System.Threading.Tasks;
 #endif
 
-namespace PJL.Core {
+namespace PJL.Patterns {
 public class AddressableScriptableSingleton<T> : ScriptableObject where T : AddressableScriptableSingleton<T> {
     private static T s_instance;
     public static T Instance {
