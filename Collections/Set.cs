@@ -12,10 +12,10 @@ public class Set<T> : IEnumerable<T> {
     public HashSet<T> HashSet { get; private set; }
 
     /// <summary>
-    ///     Inserts the initial values into the underlying dictionary
+    ///     Inserts the initial values into the underlying HashSet
     /// </summary>
-    public void Initialize() {
-        if (_initialized) return;
+    private void Initialize() {
+        if (_initialized || !Application.isPlaying) return;
         _initialized = true;
         foreach (var value in _initialValues) HashSet.Add(value);
         _initialValues = Array.Empty<T>();
@@ -38,27 +38,6 @@ public class Set<T> : IEnumerable<T> {
 
     #region HashSet
 
-    public IEqualityComparer<T> Comparer => HashSet.Comparer;
-    public int Count => HashSet.Count;
-
-    public void Add(T value) => HashSet.Add(value);
-    public void Clear() => HashSet.Clear();
-    public bool Contains(T value) => HashSet.Contains(value);
-    public int EnsureCapacity(int capacity) => HashSet.EnsureCapacity(capacity);
-    public bool Remove(T value) => HashSet.Remove(value);
-    public void TrimExcess() => HashSet.TrimExcess();
-    public bool TryGetValue(T value, out T outValue) => HashSet.TryGetValue(value, out outValue);
-    public void UnionWith(Set<T> other) => HashSet.UnionWith(other.HashSet);
-    public void IntersectWith(Set<T> other) => HashSet.IntersectWith(other.HashSet);
-    public void ExceptWith(Set<T> other) => HashSet.ExceptWith(other.HashSet);
-    public void SymmetricExceptWith(Set<T> other) => HashSet.SymmetricExceptWith(other.HashSet);
-    public bool Overlaps(Set<T> other) => HashSet.Overlaps(other.HashSet);
-    public bool IsSubsetOf(Set<T> other) => HashSet.IsSubsetOf(other.HashSet);
-    public bool IsProperSubsetOf(Set<T> other) => HashSet.IsProperSubsetOf(other.HashSet);
-    public bool IsSupersetOf(Set<T> other) => HashSet.IsSupersetOf(other.HashSet);
-    public bool IsProperSupersetOf(Set<T> other) => HashSet.IsProperSupersetOf(other.HashSet);
-    public bool SetEquals(Set<T> other) => HashSet.SetEquals(other.HashSet);
-
     public Set() => HashSet = new HashSet<T>();
 
     public Set(IEnumerable<T> enumerable) => HashSet = new HashSet<T>(enumerable);
@@ -72,9 +51,114 @@ public class Set<T> : IEnumerable<T> {
 
     public Set(int capacity, IEqualityComparer<T> comparer) => HashSet = new HashSet<T>(capacity, comparer);
 
-    public IEnumerator<T> GetEnumerator() => HashSet.GetEnumerator();
+    public IEqualityComparer<T> Comparer {
+        get {
+            Initialize();
+            return HashSet.Comparer;
+        }
+    }
 
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    public int Count {
+        get {
+            Initialize();
+            return HashSet.Count;
+        }
+    }
+
+    public void Add(T value) {
+        Initialize();
+        HashSet.Add(value);
+    }
+
+    public void Clear() {
+        Initialize();
+        HashSet.Clear();
+    }
+
+    public bool Contains(T value) {
+        Initialize();
+        return HashSet.Contains(value);
+    }
+
+    public int EnsureCapacity(int capacity) {
+        Initialize();
+        return HashSet.EnsureCapacity(capacity);
+    }
+
+    public bool Remove(T value) {
+        Initialize();
+        return HashSet.Remove(value);
+    }
+
+    public void TrimExcess() {
+        Initialize();
+        HashSet.TrimExcess();
+    }
+
+    public bool TryGetValue(T value, out T outValue) {
+        Initialize();
+        return HashSet.TryGetValue(value, out outValue);
+    }
+
+    public void UnionWith(Set<T> other) {
+        Initialize();
+        HashSet.UnionWith(other.HashSet);
+    }
+
+    public void IntersectWith(Set<T> other) {
+        Initialize();
+        HashSet.IntersectWith(other.HashSet);
+    }
+
+    public void ExceptWith(Set<T> other) {
+        Initialize();
+        HashSet.ExceptWith(other.HashSet);
+    }
+
+    public void SymmetricExceptWith(Set<T> other) {
+        Initialize();
+        HashSet.SymmetricExceptWith(other.HashSet);
+    }
+
+    public bool Overlaps(Set<T> other) {
+        Initialize();
+        return HashSet.Overlaps(other.HashSet);
+    }
+
+    public bool IsSubsetOf(Set<T> other) {
+        Initialize();
+        return HashSet.IsSubsetOf(other.HashSet);
+    }
+
+    public bool IsProperSubsetOf(Set<T> other) {
+        Initialize();
+        return HashSet.IsProperSubsetOf(other.HashSet);
+    }
+
+    public bool IsSupersetOf(Set<T> other) {
+        Initialize();
+        return HashSet.IsSupersetOf(other.HashSet);
+    }
+
+    public bool IsProperSupersetOf(Set<T> other) {
+        Initialize();
+        return HashSet.IsProperSupersetOf(other.HashSet);
+    }
+
+    public bool SetEquals(Set<T> other) {
+        Initialize();
+        return HashSet.SetEquals(other.HashSet);
+    }
+
+    public IEnumerator<T> GetEnumerator() {
+        Initialize();
+        return HashSet.GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator() {
+        Initialize();
+        return GetEnumerator();
+    }
 
     #endregion
 }

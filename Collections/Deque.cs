@@ -17,10 +17,10 @@ public class Deque<T> : IEnumerable<T> {
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     /// <summary>
-    ///     Inserts the initial values into the underlying dictionary
+    ///     Inserts the initial values into the underlying linked list
     /// </summary>
-    public void Initialize() {
-        if (_initialized) return;
+    private void Initialize() {
+        if (_initialized || !Application.isPlaying) return;
         _initialized = true;
         foreach (var value in _initialValues) LinkedList.AddLast(value);
         _initialValues = Array.Empty<T>();
@@ -41,17 +41,32 @@ public class Deque<T> : IEnumerable<T> {
 
 #endif
 
-    public T PeekFront() => LinkedList.First.Value;
-    public void Push(T value) => LinkedList.AddFirst(value);
+    public T PeekFront() {
+        Initialize();
+        return LinkedList.First.Value;
+    }
+
+    public void Push(T value) {
+        Initialize();
+        LinkedList.AddFirst(value);
+    }
 
     public T Pop() {
+        Initialize();
         var value = LinkedList.First.Value;
         LinkedList.RemoveFirst();
         return value;
     }
 
-    public T PeekBack() => LinkedList.Last.Value;
-    public void Enqueue(T value) => LinkedList.AddLast(value);
+    public T PeekBack() {
+        Initialize();
+        return LinkedList.Last.Value;
+    }
+
+    public void Enqueue(T value) {
+        Initialize();
+        LinkedList.AddLast(value);
+    }
 
     public T Dequeue() {
         var value = LinkedList.Last.Value;
@@ -59,6 +74,9 @@ public class Deque<T> : IEnumerable<T> {
         return value;
     }
 
-    public void Clear() => LinkedList.Clear();
+    public void Clear() {
+        Initialize();
+        LinkedList.Clear();
+    }
 }
 }

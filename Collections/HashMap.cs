@@ -14,8 +14,8 @@ public class HashMap<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>> {
     /// <summary>
     ///     Inserts the initial values into the underlying dictionary
     /// </summary>
-    public void Initialize() {
-        if (_initialized) return;
+    private void Initialize() {
+        if (_initialized || !Application.isPlaying) return;
         _initialized = true;
         foreach (var (key, value) in _initialValues) Dictionary[key] = value;
         _initialValues = Array.Empty<KeyValue<TKey, TValue>>();
@@ -38,29 +38,6 @@ public class HashMap<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>> {
 
     #region Dictionary
 
-    public IEqualityComparer<TKey> Comparer => Dictionary.Comparer;
-    public int Count => Dictionary.Count;
-
-    public TValue this[TKey key] {
-        get => Dictionary[key];
-        set => Dictionary[key] = value;
-    }
-
-    public Dictionary<TKey, TValue>.KeyCollection Keys => Dictionary.Keys;
-    public Dictionary<TKey, TValue>.ValueCollection Values => Dictionary.Values;
-
-    public void Add(TKey key, TValue value) => Dictionary.Add(key, value);
-    public void Clear() => Dictionary.Clear();
-    public bool ContainsKey(TKey key) => Dictionary.ContainsKey(key);
-    public bool ContainsValue(TValue value) => Dictionary.ContainsValue(value);
-    public int EnsureCapacity(int capacity) => Dictionary.EnsureCapacity(capacity);
-    public bool Remove(TKey key) => Dictionary.Remove(key);
-    public bool Remove(TKey key, out TValue value) => Dictionary.Remove(key, out value);
-    public void TrimExcess() => Dictionary.TrimExcess();
-    public void TrimExcess(int capacity) => Dictionary.TrimExcess(capacity);
-    public bool TryAdd(TKey key, TValue value) => Dictionary.TryAdd(key, value);
-    public bool TryGetValue(TKey key, out TValue value) => Dictionary.TryGetValue(key, out value);
-
     public HashMap() => Dictionary = new Dictionary<TKey, TValue>();
 
     public HashMap(IDictionary<TKey, TValue> dictionary) => Dictionary = new Dictionary<TKey, TValue>(dictionary);
@@ -81,9 +58,104 @@ public class HashMap<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>> {
     public HashMap(int capacity, IEqualityComparer<TKey> comparer) =>
         Dictionary = new Dictionary<TKey, TValue>(capacity, comparer);
 
-    public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => Dictionary.GetEnumerator();
 
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    public IEqualityComparer<TKey> Comparer => Dictionary.Comparer;
+    public int Count {
+        get {
+            Initialize();
+            return Dictionary.Count;
+        }
+    }
+
+    public TValue this[TKey key] {
+        get {
+            Initialize();
+            return Dictionary[key];
+        }
+        set {
+            Initialize();
+            Dictionary[key] = value;
+        }
+    }
+
+    public Dictionary<TKey, TValue>.KeyCollection Keys {
+        get {
+            Initialize();
+            return Dictionary.Keys;
+        }
+    }
+
+    public Dictionary<TKey, TValue>.ValueCollection Values {
+        get {
+            Initialize();
+            return Dictionary.Values;
+        }
+    }
+
+    public void Add(TKey key, TValue value) {
+        Initialize();
+        Dictionary.Add(key, value);
+    }
+
+    public void Clear() {
+        Initialize();
+        Dictionary.Clear();
+    }
+
+    public bool ContainsKey(TKey key) {
+        Initialize();
+        return Dictionary.ContainsKey(key);
+    }
+
+    public bool ContainsValue(TValue value) {
+        Initialize();
+        return Dictionary.ContainsValue(value);
+    }
+
+    public int EnsureCapacity(int capacity) {
+        Initialize();
+        return Dictionary.EnsureCapacity(capacity);
+    }
+
+    public bool Remove(TKey key) {
+        Initialize();
+        return Dictionary.Remove(key);
+    }
+
+    public bool Remove(TKey key, out TValue value) {
+        Initialize();
+        return Dictionary.Remove(key, out value);
+    }
+
+    public void TrimExcess() {
+        Initialize();
+        Dictionary.TrimExcess();
+    }
+
+    public void TrimExcess(int capacity) {
+        Initialize();
+        Dictionary.TrimExcess(capacity);
+    }
+
+    public bool TryAdd(TKey key, TValue value) {
+        Initialize();
+        return Dictionary.TryAdd(key, value);
+    }
+
+    public bool TryGetValue(TKey key, out TValue value) {
+        Initialize();
+        return Dictionary.TryGetValue(key, out value);
+    }
+
+    public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() {
+        Initialize();
+        return Dictionary.GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator() {
+        Initialize();
+        return GetEnumerator();
+    }
 
     #endregion
 }
