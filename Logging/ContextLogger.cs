@@ -6,33 +6,25 @@ using JetBrains.Annotations;
 using UnityEngine;
 
 namespace PJL.Logging {
-public enum Severity { Message, Assertion, Warning, Error, }
-
 public static class ContextLogger {
     private const string HtmlColorPrefix = "<color=#";
     private const string HtmlColorSuffix = "</color>";
 
-    private static readonly Dictionary<Severity, Color> SeverityColors = new() {
-        { Severity.Message, new Color(.3f, .7f, .4f) },
-        { Severity.Assertion, new Color(.8f, .2f, .8f) },
-        { Severity.Error, new Color(0.9f, 0.2f, 0.2f) },
-        { Severity.Warning, new Color(.7f, .7f, 0.1f) },
+    private static readonly Dictionary<LogType, Color> LogTypeColors = new() {
+        { LogType.Log, new Color(.3f, .7f, .4f) },
+        { LogType.Assert, new Color(.8f, .2f, .8f) },
+        { LogType.Error, new Color(0.9f, 0.2f, 0.2f) },
+        { LogType.Warning, new Color(.7f, .7f, 0.1f) },
+        { LogType.Exception, new Color(.5f, .2f, .5f) },
     };
 
     private static readonly StringBuilder StringBuilder = new();
     private static readonly string FormatInsertionColorHex = ColorUtility.ToHtmlStringRGB(new Color(0f, .6f, 0.9f));
 
-    public static HashSet<Severity> ActiveLogLevels = new() {
-        Severity.Message,
-        Severity.Error,
-        Severity.Assertion,
-        Severity.Warning,
-    };
-
-    public static void TodoLog(object message) => Log(Severity.Warning, "TODO", message);
+    public static void TodoLog(object message) => Log(LogType.Warning, "TODO", message);
 
     [StringFormatMethod("format")]
-    public static void TodoLogFormat(string format, params object[] insertions) => LogFormat(Severity.Warning, "TODO", format, insertions);
+    public static void TodoLogFormat(string format, params object[] insertions) => LogFormat(LogType.Warning, "TODO", format, insertions);
 
     public static void TestLog(object message) => TestLog("DEBUG", message);
 
@@ -41,18 +33,18 @@ public static class ContextLogger {
     [StringFormatMethod("format")]
     public static void TestLogFormat(string context, string format, params object[] insertions) {
 #if UNITY_EDITOR
-        LogFormat(Severity.Message, context, format, insertions);
+        LogFormat(LogType.Log, context, format, insertions);
 #endif
     }
 
-    public static void Log(Severity severity, string context, object message) { LogFormat(severity, context, message.ToString()); }
+    public static void Log(LogType logType, string context, object message) { LogFormat(logType, context, message.ToString()); }
 
     [StringFormatMethod("format")]
-    public static void LogFormat(Severity severity, string context, string format, params object[] insertions) {
-        if (!ActiveLogLevels.Contains(severity)) return;
+    public static void LogFormat(LogType logType, string context, string format, params object[] insertions) {
+        if (!Debug.unityLogger.IsLogTypeAllowed(logType)) return;
         try {
             var time = DateTime.Now.ToString("HH:mm:ss");
-            GenerateColoredText(SeverityColors[Severity.Message], $"[{time} -- {context}]");
+            GenerateColoredText(LogTypeColors[LogType.Log], $"[{time} -- {context}]");
             StringBuilder.Append(' ');
 
             var coloredInsertions = insertions
@@ -66,26 +58,12 @@ public static class ContextLogger {
                 )
                 .OfType<object>()
                 .ToArray();
-            switch (severity) {
-                case Severity.Message:
-                    StringBuilder.Append(format);
-                    Debug.LogFormat(StringBuilder.ToString(), coloredInsertions);
-                    break;
-                case Severity.Error:
-                    GenerateColoredText(SeverityColors[severity], format);
-                    Debug.LogErrorFormat(StringBuilder.ToString(), coloredInsertions);
-                    break;
-                case Severity.Assertion:
-                    GenerateColoredText(SeverityColors[severity], format);
-                    Debug.LogAssertionFormat(StringBuilder.ToString(), coloredInsertions);
-                    break;
-                case Severity.Warning:
-                    GenerateColoredText(SeverityColors[severity], format);
-                    Debug.LogWarningFormat(StringBuilder.ToString(), coloredInsertions);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(severity), severity, null);
+            if (logType == LogType.Log) {
+                StringBuilder.Append(format);
+            } else {
+                GenerateColoredText(LogTypeColors[logType], format);
             }
+            Debug.unityLogger.LogFormat(logType, StringBuilder.ToString(), coloredInsertions);
         } finally { StringBuilder.Clear(); }
     }
 

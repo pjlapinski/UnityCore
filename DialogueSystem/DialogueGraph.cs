@@ -30,7 +30,7 @@ public class DialogueGraph : NodeGraph {
             if (candidates.Length == 0) {
                 if (playMode)
                     ContextLogger.LogFormat(
-                        Severity.Error,
+                        LogType.Error,
                         "DIALOGUES",
                         "No starter nodes for '{0}' dialogue.",
                         name
@@ -41,7 +41,7 @@ public class DialogueGraph : NodeGraph {
 
             if (candidates.Length > 1 && playMode)
                 ContextLogger.LogFormat(
-                    Severity.Error,
+                    LogType.Error,
                     "DIALOGUES",
                     "More than one starter node for '{0}' dialogue.",
                     name
@@ -76,7 +76,7 @@ public class DialogueGraph : NodeGraph {
         for (var i = 0; i < selectorsLength; ++i) {
             if (PathSelectors.ContainsKey(RequiredFuncPathSelectors[i])) continue;
             ContextLogger.LogFormat(
-                Severity.Error,
+                LogType.Error,
                 "DIALOGUES",
                 "Missing path selector function for {0} selector.",
                 RequiredFuncPathSelectors[i]
@@ -86,7 +86,7 @@ public class DialogueGraph : NodeGraph {
 
         CurrentNode = StarterNode;
         if (CurrentNode == null) {
-            ContextLogger.LogFormat(Severity.Error, "DIALOGUES", "The dialogue '{0}' has no starting nodes.", name);
+            ContextLogger.LogFormat(LogType.Error, "DIALOGUES", "The dialogue '{0}' has no starting nodes.", name);
             return;
         }
 

@@ -18,7 +18,7 @@ public abstract class BaseDialogueNode : Node {
             if (speakers == null) return string.Empty;
             if (_speakerIndex < speakers.Length) return speakers[_speakerIndex];
             ContextLogger.LogFormat(
-                Severity.Error,
+                LogType.Error,
                 "DIALOGUES",
                 "No speaker with index {0} in dialogue '{1}'.",
                 _speakerIndex,
