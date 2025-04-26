@@ -1,5 +1,6 @@
 ﻿#if UNITY_EDITOR
 using System;
+using PJL.Debug;
 using UnityEditor;
 using UnityEngine;
 
@@ -38,7 +39,7 @@ public class GuidDrawer : PropertyDrawer {
             if (Guid.TryParse(EditorGUIUtility.systemCopyBuffer, out var guid)) {
                 property.stringValue = guid.ToString();
             } else {
-                Debug.LogError("Tried to paste an invalid GUID.");
+                ContextLogger.Log(LogType.Error, "EDITOR", "Tried to paste an invalid GUID.");
             }
         }
         x += btnWidth + HorizontalSpacing;

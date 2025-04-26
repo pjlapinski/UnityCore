@@ -5,7 +5,7 @@ using System.Text;
 using JetBrains.Annotations;
 using UnityEngine;
 
-namespace PJL.Logging {
+namespace PJL.Debug {
 public static class ContextLogger {
     private const string HtmlColorPrefix = "<color=#";
     private const string HtmlColorSuffix = "</color>";
@@ -41,7 +41,7 @@ public static class ContextLogger {
 
     [StringFormatMethod("format")]
     public static void LogFormat(LogType logType, string context, string format, params object[] insertions) {
-        if (!Debug.unityLogger.IsLogTypeAllowed(logType)) return;
+        if (!UnityEngine.Debug.unityLogger.IsLogTypeAllowed(logType)) return;
         try {
             var time = DateTime.Now.ToString("HH:mm:ss");
             GenerateColoredText(LogTypeColors[LogType.Log], $"[{time} -- {context}]");
@@ -63,7 +63,7 @@ public static class ContextLogger {
             } else {
                 GenerateColoredText(LogTypeColors[logType], format);
             }
-            Debug.unityLogger.LogFormat(logType, StringBuilder.ToString(), coloredInsertions);
+            UnityEngine.Debug.unityLogger.LogFormat(logType, StringBuilder.ToString(), coloredInsertions);
         } finally { StringBuilder.Clear(); }
     }
 
