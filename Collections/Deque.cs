@@ -11,8 +11,6 @@ public class Deque<T> : IEnumerable<T> {
 
     public LinkedList<T> LinkedList { get; private set; }
 
-    public int Count => LinkedList.Count;
-
     public IEnumerator<T> GetEnumerator() => LinkedList.GetEnumerator();
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
@@ -40,6 +38,13 @@ public class Deque<T> : IEnumerable<T> {
     }
 
 #endif
+
+    public int Count {
+        get {
+            Initialize();
+            return LinkedList.Count;
+        }
+    }
 
     public T PeekFront() {
         Initialize();
