@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using UnityEngine;
-using UnityEngine.InputSystem.Utilities;
 using UnityEngine.Localization;
 using XNode;
 
@@ -11,7 +10,7 @@ namespace PJL.DialogueSystem
         [SerializeField, Output(dynamicPortList = true, connectionType = ConnectionType.Override)]
         private LocalizedString[] _paths;
 
-        public ReadOnlyArray<string> Paths { get; private set; }
+        public string[] Paths { get; private set; }
 
         protected override void Init()
         {

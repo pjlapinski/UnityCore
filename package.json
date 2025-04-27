@@ -1,0 +1,14 @@
+﻿{
+  "name": "com.pjl.unity-core",
+  "version": "1.0.0",
+  "displayName": "PJL",
+  "description": "",
+  "unity": "6.0",
+  "unityRelease": "45f1",
+  "dependencies": {
+    "com.github.siccity.xnode": "1.8.0",
+    "com.unity.localization": "1.5.4",
+    "com.unity.addressables": "2.4.3",
+    "com.unity.nuget.newtonsoft-json": "3.2.1"
+  }
+}

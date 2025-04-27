@@ -4,7 +4,6 @@
   "references": [
     "XNode",
     "NaughtyAttributes.Core",
-    "Unity.InputSystem",
     "Unity.Localization",
     "Unity.Addressables",
     "Unity.Addressables.Editor",
