@@ -2,19 +2,23 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace PJL.Patterns {
-[Serializable]
-public struct Reactive<T> {
-    [SerializeField] private T _value;
+namespace PJL.Patterns
+{
+    [Serializable]
+    public struct Reactive<T>
+    {
+        [SerializeField] private T _value;
 
-    public T Value {
-        get => _value;
-        set {
-            _value = value;
-            OnValueChange?.Invoke(_value);
+        public T Value
+        {
+            get => _value;
+            set
+            {
+                _value = value;
+                OnValueChange?.Invoke(_value);
+            }
         }
-    }
 
-    [field: SerializeField] public UnityEvent<T> OnValueChange { get; private set; }
-}
+        [field: SerializeField] public UnityEvent<T> OnValueChange { get; private set; }
+    }
 }

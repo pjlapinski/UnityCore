@@ -1,22 +1,22 @@
 ﻿// Source: https://github.com/adammyhre/Unity-Utils/blob/master/UnityUtils/Scripts/Hotkeys/Editor/CloseWindowTab.cs
+
 #if UNITY_EDITOR
 
 using UnityEditor;
 using UnityEngine;
 
-public static class CloseWindowTab {
+public static class CloseWindowTab
+{
     [MenuItem("File/Close Window Tab %w")]
-    private static void CloseTab() {
+    private static void CloseTab()
+    {
         var focusedWindow = EditorWindow.focusedWindow;
-        if (focusedWindow != null) {
+        if (focusedWindow != null)
             CloseTab(focusedWindow);
-        } else {
+        else
             Debug.LogWarning("Found no focused window to close");
-        }
     }
 
-    private static void CloseTab(EditorWindow editorWindow) {
-        editorWindow.Close();
-    }
+    private static void CloseTab(EditorWindow editorWindow) => editorWindow.Close();
 }
 #endif

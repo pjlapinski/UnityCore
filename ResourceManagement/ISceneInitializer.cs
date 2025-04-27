@@ -1,5 +1,7 @@
-﻿namespace PJL.ResourceManagement {
-public interface ISceneInitializer {
-    void Initialize();
-}
+﻿namespace PJL.ResourceManagement
+{
+    public interface ISceneInitializer
+    {
+        void Initialize();
+    }
 }
