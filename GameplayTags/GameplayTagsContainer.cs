@@ -17,13 +17,13 @@ namespace PJL.GameplayTags
 
         public static GameplayTagsContainer Empty => new();
 
-        public int Length
+        public int Count
         {
             get
             {
                 var sum = 0;
                 for (var i = 1; i < GameplayTagsManager.NumTags; ++i)
-                    if (_tags[i] || _parents[i])
+                    if (_tags[i])
                         ++sum;
 
                 return sum;

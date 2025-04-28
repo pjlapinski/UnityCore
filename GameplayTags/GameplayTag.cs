@@ -43,13 +43,13 @@ namespace PJL.GameplayTags
                 ? GameplayTagsContainer.Empty
                 : GameplayTagsManager.ParentContainers[_runtimeIndex];
 
-        public GameplayTagsContainer SingleTagsContainer =>
+        public GameplayTagsContainer SingleTagContainer =>
             IsNoneOrInvalid ? GameplayTagsContainer.Empty : GameplayTagsManager.SingleTagContainers[_runtimeIndex];
 
         public bool MatchesTagDepth(GameplayTag other) => other.Depth == Depth;
-        public bool MatchesTag(GameplayTag other) => SingleTagsContainer.Contains(other);
+        public bool MatchesTag(GameplayTag other) => SingleTagContainer.Contains(other);
         public bool MatchesTagExact(GameplayTag other) => this == other;
-        public bool MatchesAny(GameplayTagsContainer tagses) => tagses.Contains(this);
-        public bool MatchesAnyExact(GameplayTagsContainer tagses) => tagses.ContainsExact(this);
+        public bool MatchesAny(GameplayTagsContainer tags) => tags.Contains(this);
+        public bool MatchesAnyExact(GameplayTagsContainer tags) => tags.ContainsExact(this);
     }
 }
