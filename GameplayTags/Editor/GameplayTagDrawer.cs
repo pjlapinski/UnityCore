@@ -8,7 +8,6 @@ namespace PJL.GameplayTags.Editor
     public class GameplayTagDrawer : PropertyDrawer
     {
         private GUIContent[] _contents;
-        private int _selection = -1;
 
         private void Init(SerializedProperty property)
         {
@@ -18,8 +17,6 @@ namespace PJL.GameplayTags.Editor
                 for (var i = 0; i < GameplayTagsManager.NumTags; ++i)
                     _contents[i] = new GUIContent(GameplayTagsManager.Names[i]);
             }
-
-            if (_selection == -1) _selection = property.FindPropertyRelative("_runtimeIndex").intValue;
         }
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -28,15 +25,14 @@ namespace PJL.GameplayTags.Editor
 
             EditorGUI.BeginProperty(position, label, property);
 
-            var previous = _selection;
-            _selection = EditorGUI.Popup(position, label, _selection, _contents);
-            if (previous != _selection)
+            var idx = property.FindPropertyRelative("_runtimeIndex");
+            var previous = idx.intValue;
+            idx.intValue = EditorGUI.Popup(position, label, idx.intValue, _contents);
+            if (previous != idx.intValue)
             {
-                var idx = property.FindPropertyRelative("_runtimeIndex");
                 var parent = property.FindPropertyRelative("_directParentIndex");
                 var depth = property.FindPropertyRelative("_depth");
-                var tag = GameplayTagsManager.Tags[_selection];
-                idx.intValue = tag._runtimeIndex;
+                var tag = GameplayTagsManager.Tags[idx.intValue];
                 parent.intValue = tag._directParentIndex;
                 depth.intValue = tag._depth;
             }

@@ -23,23 +23,23 @@ namespace PJL.GameplayTags
             {
                 var sum = 0;
                 for (var i = 1; i < GameplayTagsManager.NumTags; ++i)
-                    if (_tags[i])
+                    if (_tags[i] || _parents[i])
                         ++sum;
 
                 return sum;
             }
         }
 
-        public GameplayTag this[int idx]
+        public int CountExact
         {
             get
             {
-                var j = 0;
+                var sum = 0;
                 for (var i = 1; i < GameplayTagsManager.NumTags; ++i)
-                    if (_tags[i] && ++j == idx)
-                        return GameplayTagsManager.Tags[i];
+                    if (_tags[i])
+                        ++sum;
 
-                throw new IndexOutOfRangeException();
+                return sum;
             }
         }
 

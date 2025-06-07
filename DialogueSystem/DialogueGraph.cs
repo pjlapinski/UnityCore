@@ -8,7 +8,7 @@ using XNode;
 
 namespace PJL.DialogueSystem
 {
-    [CreateAssetMenu(fileName = "New Dialogue Graph", menuName = "Dialogues/Dialogue Graph")]
+    [CreateAssetMenu(fileName = "New Dialogue Graph", menuName = "PJL/Dialogues/Dialogue Graph")]
     public class DialogueGraph : NodeGraph
     {
         internal const string NullPathSelector = "<null>";
