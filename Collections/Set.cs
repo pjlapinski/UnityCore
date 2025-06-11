@@ -20,7 +20,9 @@ namespace PJL.Collections
         {
             if (_initialized || !Application.isPlaying) return;
             _initialized = true;
-            foreach (var value in _initialValues) HashSet.Add(value);
+            HashSet = new();
+            if (_initialValues != null)
+                foreach (var value in _initialValues) HashSet.Add(value);
             _initialValues = Array.Empty<T>();
         }
 

@@ -32,7 +32,9 @@ namespace PJL.Collections
         {
             if (_initialized || !Application.isPlaying) return;
             _initialized = true;
-            foreach (var value in _initialValues) LinkedList.AddLast(value);
+            LinkedList = new();
+            if (_initialValues != null)
+                foreach (var value in _initialValues) LinkedList.AddLast(value);
             _initialValues = Array.Empty<T>();
         }
 

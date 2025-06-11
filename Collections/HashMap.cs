@@ -20,7 +20,9 @@ namespace PJL.Collections
         {
             if (_initialized || !Application.isPlaying) return;
             _initialized = true;
-            foreach (var (key, value) in _initialValues) Dictionary[key] = value;
+            Dictionary = new();
+            if (_initialValues != null)
+                foreach (var (key, value) in _initialValues) Dictionary[key] = value;
             _initialValues = Array.Empty<KeyValue<TKey, TValue>>();
         }
 

@@ -1,4 +1,4 @@
-﻿namespace PJL.Patterns.Editor
+﻿namespace PJL.Patterns
 {
     public interface IEvent {}
 }

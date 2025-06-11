@@ -1,11 +1,10 @@
 ﻿#if UNITY_EDITOR
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using PJL.GameplayTags;
 using UnityEditor;
 
-namespace PJL.GameplayAbilitySystem.Editor
+namespace PJL.AbilitySystem.Editor
 {
     [CustomEditor(typeof(AttributeValues)), CanEditMultipleObjects]
     public class AttributeValuesDrawer : UnityEditor.Editor
@@ -22,13 +21,13 @@ namespace PJL.GameplayAbilitySystem.Editor
             var set = setField.objectReferenceValue as AttributeSet;
             if (set != null)
             {
-                var tags = typeof(AttributeSet)
-                    .GetField("_attributes", BindingFlags.NonPublic | BindingFlags.Instance)
-                    !.GetValue(set) as GameplayTag[];
-                if (tags != null)
+                if (typeof(AttributeSet)
+                        .GetField("_attributes", BindingFlags.NonPublic | BindingFlags.Instance)
+                        !.GetValue(set) is GameplayTag[] tags)
                 {
-                    foreach (var tag in tags)
-                        AddTagToDataIfMissing(tag, dataField);
+                    for (var i = 0; i < tags.Length; ++i)
+                        AddTagToDataIfMissing(tags, i, dataField);
+
                     RemoveOrphanedData(tags, dataField);
 
                     for (var i = 0; i < dataField.arraySize; ++i)
@@ -38,24 +37,20 @@ namespace PJL.GameplayAbilitySystem.Editor
             serializedObject.ApplyModifiedProperties();
         }
 
-        private void AddTagToDataIfMissing(GameplayTag tag, SerializedProperty data)
+        private void AddTagToDataIfMissing(GameplayTag[] tags, int idx, SerializedProperty data)
         {
-            for (var i = 0; i < data.arraySize; ++i)
-            {
-                var k = data.GetArrayElementAtIndex(i);
-                var kvp = (TagAttributePair)data.GetArrayElementAtIndex(i).boxedValue;
-                if (kvp._tag == tag) return;
-            }
+            for (var i = data.arraySize; i < tags.Length; i++)
+                data.InsertArrayElementAtIndex(i);
+
+            var kvp = (TagAttributePair)data.GetArrayElementAtIndex(idx).boxedValue;
+            if (kvp.Tag == tags[idx]) return;
 
             var value = new TagAttributePair
             {
-                _tag = tag,
-                _baseValue = 0,
-                _max = 100,
-                _min = 0
+                Tag = tags[idx],
+                Attribute = new Attribute(){BaseValue = 0, Max = 100, Min = 0}
             };
-            data.InsertArrayElementAtIndex(data.arraySize);
-            data.GetArrayElementAtIndex(data.arraySize - 1).boxedValue = value;
+            data.GetArrayElementAtIndex(idx).boxedValue = value;
         }
 
         private void RemoveOrphanedData(GameplayTag[] tags, SerializedProperty data)
@@ -64,7 +59,7 @@ namespace PJL.GameplayAbilitySystem.Editor
             {
                 var k = data.GetArrayElementAtIndex(i);
                 var kvp = (TagAttributePair)data.GetArrayElementAtIndex(i).boxedValue;
-                if (!tags.Any(t => t.MatchesTagExact(kvp._tag)))
+                if (tags.Length <= i || !tags.Any(t => t.MatchesTagExact(kvp.Tag)))
                     data.DeleteArrayElementAtIndex(i);
             }
         }

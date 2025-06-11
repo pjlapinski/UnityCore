@@ -1,27 +1,23 @@
 ﻿#if UNITY_EDITOR
+using PJL.GameplayTags;
 using UnityEditor;
 using UnityEngine;
 
-namespace PJL.GameplayAbilitySystem.Editor
+namespace PJL.AbilitySystem.Editor
 {
     [CustomPropertyDrawer(typeof(TagAttributePair))]
     public class TagAttributePairDrawer : PropertyDrawer
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            var obj = (TagAttributePair)property.boxedValue;
             EditorGUI.BeginProperty(position, label, property);
 
-            EditorGUILayout.LabelField(obj._tag.ToString());
+            EditorGUILayout.BeginVertical(GUI.skin.box);
+            EditorGUILayout.LabelField(((GameplayTag)property.FindPropertyRelative("Tag").boxedValue).ToString());
             ++EditorGUI.indentLevel;
-            obj._baseValue = Mathf.Clamp(EditorGUILayout.FloatField("Base Value", obj._baseValue), obj._min, obj._max);
-            var min = EditorGUILayout.FloatField("Min", obj._min);
-            obj._min = min < obj._min ? min : obj._min;
-            var max = EditorGUILayout.FloatField("Max", obj._max);
-            obj._max = max > obj._min ? max : obj._max;
+            EditorGUILayout.PropertyField(property.FindPropertyRelative("Attribute"));
             --EditorGUI.indentLevel;
-
-            property.boxedValue = obj;
+            EditorGUILayout.EndVertical();
 
             EditorGUI.EndProperty();
         }
