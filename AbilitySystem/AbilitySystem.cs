@@ -5,6 +5,7 @@ using PJL.Collections;
 using PJL.Debug;
 using PJL.GameplayTags;
 using PJL.Patterns;
+using PJL.Utilities;
 using UnityEngine;
 
 namespace PJL.AbilitySystem
@@ -14,10 +15,10 @@ namespace PJL.AbilitySystem
         [BoxGroup("Attributes")]
         [SerializeField] private AttributeValues _attributeValues;
 
-        [BoxGroup("Attributes"), DisableIf(nameof(FieldsReadOnly))]
+        [BoxGroup("Attributes"), DisableIf(nameof(FieldsReadOnly)), Indent]
         [SerializeField] private AssociativeArray<GameplayTag, Attribute> _attributes;
 
-        [BoxGroup("Attributes"), DisableIf(nameof(FieldsReadOnly))]
+        [BoxGroup("Attributes"), DisableIf(nameof(FieldsReadOnly)), Indent]
         [SerializeField] private AssociativeArray<GameplayTag, List<AttributeModifier>> _modifiers;
 
         private bool FieldsReadOnly => !Application.isPlaying;
