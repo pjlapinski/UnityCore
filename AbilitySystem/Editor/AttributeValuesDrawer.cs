@@ -42,13 +42,15 @@ namespace PJL.AbilitySystem.Editor
             for (var i = data.arraySize; i < tags.Length; i++)
                 data.InsertArrayElementAtIndex(i);
 
-            var kvp = (TagAttributePair)data.GetArrayElementAtIndex(idx).boxedValue;
-            if (kvp.Tag == tags[idx]) return;
+            var kvp = (TagAttributeData)data.GetArrayElementAtIndex(idx).boxedValue;
+            if (kvp._tag == tags[idx]) return;
 
-            var value = new TagAttributePair
+            var value = new TagAttributeData
             {
-                Tag = tags[idx],
-                Attribute = new Attribute(){BaseValue = 0, Max = 100, Min = 0}
+                _tag = tags[idx],
+                _attribute = 0,
+                _min = 0,
+                _max = 100
             };
             data.GetArrayElementAtIndex(idx).boxedValue = value;
         }
@@ -58,8 +60,8 @@ namespace PJL.AbilitySystem.Editor
             for (var i = data.arraySize - 1; i >= 0; i--)
             {
                 var k = data.GetArrayElementAtIndex(i);
-                var kvp = (TagAttributePair)data.GetArrayElementAtIndex(i).boxedValue;
-                if (tags.Length <= i || !tags.Any(t => t.MatchesTagExact(kvp.Tag)))
+                var kvp = (TagAttributeData)data.GetArrayElementAtIndex(i).boxedValue;
+                if (tags.Length <= i || !tags.Any(t => t.MatchesTagExact(kvp._tag)))
                     data.DeleteArrayElementAtIndex(i);
             }
         }

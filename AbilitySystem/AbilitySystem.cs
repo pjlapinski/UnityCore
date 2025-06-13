@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using NaughtyAttributes;
 using PJL.Collections;
 using PJL.Debug;
@@ -29,43 +30,17 @@ namespace PJL.AbilitySystem
         {
             if (!_attributes.TryGetValue(tag, out var attribute)) return;
             attribute.BaseValue = value;
+            attribute.UpdateCurrentValue(_modifiers[tag]);
             _attributes[tag] = attribute;
         }
 
-        public float GetAttribute(GameplayTag tag)
-        {
-            var mods = _modifiers[tag];
-            var add = 0f;
-            var mul = 1f;
-            var over = Option<float>.None;
-
-            foreach (var mod in mods)
-            {
-                switch (mod.Type)
-                {
-                    case ModifierType.Additive:
-                        add += mod.Value;
-                        break;
-                    case ModifierType.Multiplicative:
-                        mul *= mod.Value;
-                        break;
-                    case ModifierType.Override:
-                        over = mod.Value;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-
-            if (over.TryUnwrap(out var o))
-                return o;
-            return (_attributes[tag].BaseValue + add) * mul;
-        }
+        public float GetAttribute(GameplayTag tag) => _attributes[tag].CurrentValue;
 
         public float GetAttributeBase(GameplayTag tag) => _attributes[tag].BaseValue;
 
         public void AddModifier(GameplayTag tag, AttributeModifier modifier)
         {
+            var attr = _attributes[tag];
             var mods = _modifiers[tag];
             var idx = mods.FindIndex(mod => mod.Tag == modifier.Tag);
             if (idx == -1)
@@ -76,10 +51,13 @@ namespace PJL.AbilitySystem
             var mod = mods[idx];
             ++mod.Sources;
             mod.Value = modifier.Value;
+            attr.UpdateCurrentValue(mods);
+            _attributes[tag] = attr;
         }
 
         public void RemoveModifier(GameplayTag tag, GameplayTag modifier)
         {
+            var attr = _attributes[tag];
             var mods = _modifiers[tag];
             var idx = mods.FindIndex(mod => mod.Tag == modifier);
             if (idx == -1) return;
@@ -87,9 +65,23 @@ namespace PJL.AbilitySystem
             --mod.Sources;
             if (mod.Sources <= 0)
                 mods.RemoveAt(idx);
+            attr.UpdateCurrentValue(mods);
+            _attributes[tag] = attr;
         }
 
         public void RemoveModifier(GameplayTag tag, AttributeModifier modifier) => RemoveModifier(tag, modifier.Tag);
+
+        [Button]
+        private void UpdateAllCurrentValues()
+        {
+            var newAttrs = new AssociativeArray<GameplayTag, Attribute>();
+            foreach (var (tag, attr) in _attributes)
+            {
+                attr.UpdateCurrentValue(_modifiers[tag]);
+                newAttrs[tag] = attr;
+            }
+            _attributes = newAttrs;
+        }
 
         #endregion
 
@@ -103,10 +95,14 @@ namespace PJL.AbilitySystem
                 return;
             }
 
-            foreach (var pair in _attributeValues._data)
+            foreach (var data in _attributeValues._data)
             {
-                _attributes[pair.Tag] = pair.Attribute;
-                _modifiers[pair.Tag] = new();
+                _attributes[data._tag] = new()
+                {
+                    BaseValue = Mathf.Clamp(data._attribute, data._min, data._max),
+                    CurrentValue = Mathf.Clamp(data._attribute, data._min, data._max),
+                };
+                _modifiers[data._tag] = new();
             }
         }
 

@@ -5,16 +5,16 @@ using UnityEngine;
 namespace PJL.AbilitySystem
 {
     [Serializable]
-    internal struct TagAttributePair
+    internal struct TagAttributeData
     {
-        [SerializeField] internal GameplayTag Tag;
-        [SerializeField] internal Attribute Attribute;
+        [SerializeField] internal GameplayTag _tag;
+        [SerializeField] internal float _attribute, _min, _max;
     }
 
     [CreateAssetMenu(fileName = "New Attribute Values", menuName = "PJL/Ability System/Attribute Values")]
     public class AttributeValues : ScriptableObject
     {
         [SerializeReference] private AttributeSet _attributeSet;
-        [SerializeField] internal TagAttributePair[] _data;
+        [SerializeField] internal TagAttributeData[] _data;
     }
 }
