@@ -5,10 +5,11 @@ namespace PJL.GameplayTags
     {
         internal const int NumTags = 1;
 
-        internal static readonly string[] Names =
+        internal static string[] NamesInit => new [];
         {
             "None",
         };
+        internal static string[] Names = NamesInit();
     }
 }
 #endif

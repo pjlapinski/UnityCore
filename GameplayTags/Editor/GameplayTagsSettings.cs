@@ -68,11 +68,13 @@ namespace PJL.GameplayTags.Editor
 
                 await writer.WriteLineAsync($"        internal const int NumTags = {source._tags.Count + 1};\n");
 
-                await writer.WriteLineAsync("        internal static readonly string[] Names = \n        {");
+                await writer.WriteLineAsync("        internal static string[] NamesInit() => new []\n        {");
                 await writer.WriteLineAsync("            \"None\",");
                 foreach (var tag in source._tags) await writer.WriteLineAsync($"            \"{tag}\",");
+                await writer.WriteLineAsync("        };\n");
 
-                await writer.WriteLineAsync("        };");
+                await writer.WriteLineAsync("        internal static string[] Names = NamesInit();");
+
 
                 await writer.WriteLineAsync("    }\n}");
                 writer.Close();
@@ -114,6 +116,7 @@ namespace PJL.GameplayTags.Editor
             if (GUILayout.Button("Apply"))
             {
                 await WriteChanges();
+                GameplayTagsManager.Names = GameplayTagsManager.NamesInit();
                 return;
             }
 

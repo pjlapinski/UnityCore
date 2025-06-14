@@ -15,6 +15,8 @@ namespace PJL.GameplayTags.Editor
             if (property.isExpanded = EditorGUI.Foldout(position, property.isExpanded, label, true))
             {
                 var asContainer = (GameplayTagsContainer)property.boxedValue;
+                if (asContainer._tags.Length < GameplayTagsManager.NumTags)
+                    asContainer = new GameplayTagsContainer();
                 ++EditorGUI.indentLevel;
 
                 for (var i = 1; i < GameplayTagsManager.NumTags; ++i)
