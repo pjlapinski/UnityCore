@@ -7,6 +7,7 @@ using PJL.Debug;
 using PJL.GameplayTags;
 using PJL.Patterns;
 using PJL.Utilities;
+using Unity.VisualScripting.YamlDotNet.Core.Tokens;
 using UnityEngine;
 
 namespace PJL.AbilitySystem
@@ -16,60 +17,47 @@ namespace PJL.AbilitySystem
         [BoxGroup("Attributes")]
         [SerializeField] private AttributeValues _attributeValues;
 
-        [BoxGroup("Attributes"), DisableIf(nameof(FieldsReadOnly)), Indent]
+        [BoxGroup("Attributes"), Indent]
         [SerializeField] private AssociativeArray<GameplayTag, Attribute> _attributes;
 
-        [BoxGroup("Attributes"), DisableIf(nameof(FieldsReadOnly)), Indent]
+        [BoxGroup("Attributes"), Indent]
         [SerializeField] private AssociativeArray<GameplayTag, List<AttributeModifier>> _modifiers;
-
-        private bool FieldsReadOnly => !Application.isPlaying;
 
         #region Attributes
 
-        public void SetAttributeBase(GameplayTag tag, float value)
+        public void SetAttributeBase(GameplayTag attribute, float value)
         {
-            if (!_attributes.TryGetValue(tag, out var attribute)) return;
-            attribute.BaseValue = value;
-            attribute.UpdateCurrentValue(_modifiers[tag]);
-            _attributes[tag] = attribute;
+            if (!_attributes.TryGetValue(attribute, out var att)) return;
+            att.BaseValue = value;
+            att.UpdateCurrentValue(_modifiers[attribute]);
+            _attributes[attribute] = att;
         }
 
-        public float GetAttribute(GameplayTag tag) => _attributes[tag].CurrentValue;
+        public float GetAttribute(GameplayTag attribute) => _attributes[attribute].CurrentValue;
 
-        public float GetAttributeBase(GameplayTag tag) => _attributes[tag].BaseValue;
+        public float GetAttributeBase(GameplayTag attribute) => _attributes[attribute].BaseValue;
 
-        public void AddModifier(GameplayTag tag, AttributeModifier modifier)
+        public void AddModifier(GameplayTag attribute, AttributeModifier modifier)
         {
-            var attr = _attributes[tag];
-            var mods = _modifiers[tag];
-            var idx = mods.FindIndex(mod => mod.Tag == modifier.Tag);
-            if (idx == -1)
-            {
-                mods.Add(modifier);
-                return;
-            }
-            var mod = mods[idx];
-            ++mod.Sources;
-            mod.Value = modifier.Value;
+            var attr = _attributes[attribute];
+            var mods = _modifiers[attribute];
+            mods.Add(modifier);
             attr.UpdateCurrentValue(mods);
-            _attributes[tag] = attr;
+            _attributes[attribute] = attr;
         }
 
-        public void RemoveModifier(GameplayTag tag, GameplayTag modifier)
+        public void RemoveModifier(GameplayTag attribute, GameplayTag modifier)
         {
-            var attr = _attributes[tag];
-            var mods = _modifiers[tag];
+            var attr = _attributes[attribute];
+            var mods = _modifiers[attribute];
             var idx = mods.FindIndex(mod => mod.Tag == modifier);
             if (idx == -1) return;
-            var mod = mods[idx];
-            --mod.Sources;
-            if (mod.Sources <= 0)
-                mods.RemoveAt(idx);
+            mods.RemoveAt(idx);
             attr.UpdateCurrentValue(mods);
-            _attributes[tag] = attr;
+            _attributes[attribute] = attr;
         }
 
-        public void RemoveModifier(GameplayTag tag, AttributeModifier modifier) => RemoveModifier(tag, modifier.Tag);
+        public void RemoveModifier(GameplayTag attribute, AttributeModifier modifier) => RemoveModifier(attribute, modifier.Tag);
 
         [Button]
         private void UpdateAllCurrentValues()

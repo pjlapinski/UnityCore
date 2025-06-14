@@ -16,6 +16,5 @@ namespace PJL.AbilitySystem
         [field: SerializeField] public GameplayTag Tag { get; set; }
         [field: SerializeField] public ModifierType Type { get; set; }
         [field: SerializeField] public float Value { get; set; }
-        [field: SerializeField] public int Sources { get; set; }
     }
 }
