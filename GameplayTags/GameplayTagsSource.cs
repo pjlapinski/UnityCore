@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using PJL.Utilities.Extensions;
 using UnityEditor;
 using UnityEngine;
 
@@ -36,17 +38,31 @@ namespace PJL.GameplayTags
         internal void Add(string tag)
         {
             if (_tags.Contains(tag)) return;
-            _tags.Add(tag);
+            Insert(tag);
             var dot = tag.LastIndexOf('.');
             if (dot > -1) Add(tag[..dot]);
+        }
 
-            _tags.Sort();
+        internal void Insert(string tag)
+        {
+            var emptyIdx = _tags.IndexOf(string.Empty);
+            if (emptyIdx == -1) _tags.Add(tag);
+            else _tags[emptyIdx] = tag;
         }
 
         internal void Remove(string tag)
         {
-            _tags.RemoveAll(t => t.StartsWith(tag));
-            _tags.Sort();
+            var indices = _tags
+                .ZipWithIndex()
+                .Where(pair => pair.Value.StartsWith(tag))
+                .Select(pair => pair.Index)
+                .ToArray();
+
+            foreach (var index in indices)
+                _tags[index] = string.Empty;
+
+            while (_tags.Count > 0 && _tags[^1].IsNullOrEmpty())
+                _tags.RemoveAt(_tags.Count - 1);
         }
 
         internal void RefreshData(string sourceFilePath)

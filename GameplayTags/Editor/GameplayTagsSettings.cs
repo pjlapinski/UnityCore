@@ -21,10 +21,9 @@ namespace PJL.GameplayTags.Editor
         private SerializedObject _settings;
         private bool _waiting;
 
-        public GameplayTagsSettings(string path, SettingsScope scopes, IEnumerable<string> keywords = null) : base(path,
-            scopes, keywords)
-        {
-        }
+        public GameplayTagsSettings(string path, SettingsScope scopes, IEnumerable<string> keywords = null)
+            : base(path, scopes, keywords)
+        { }
 
         private string TargetDir => Path.Join(Application.dataPath, "PJLData");
         private string TargetRefPath => Path.Join(TargetDir, "PJL.asmref");
@@ -139,13 +138,14 @@ namespace PJL.GameplayTags.Editor
 
             var indent = EditorGUI.indentLevel;
 
-            for (var i = 0; i < source._tags.Count; i++)
+            var tags = source._tags.Where(t => !t.IsNullOrEmpty()).OrderBy(t => t).ToArray();
+            for (var i = 0; i < tags.Length; i++)
             {
                 EditorGUILayout.BeginHorizontal();
-                EditorGUI.indentLevel = indent + source._tags[i].Count(c => c == '.');
-                EditorGUILayout.LabelField(source._tags[i]);
+                EditorGUI.indentLevel = indent + tags[i].Count(c => c == '.');
+                EditorGUILayout.LabelField(tags[i]);
                 EditorGUI.indentLevel = indent;
-                if (GUILayout.Button("Remove")) delete = source._tags[i];
+                if (GUILayout.Button("Remove")) delete = tags[i];
 
                 EditorGUILayout.EndHorizontal();
             }
