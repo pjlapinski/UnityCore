@@ -39,10 +39,10 @@ namespace PJL.AbilitySystem
         [field: Foldout("Events")]
         [field: SerializeField] public UnityEvent<GameplayTag, float> OnAbilityCooldownChanged { get; set; }
 
-        public void Tick(float value)
+        public void Tick(float delta)
         {
-            TickAbilityCooldowns(value);
-            TickEffects(value);
+            TickAbilityCooldowns(delta);
+            TickEffects(delta);
         }
 
         #region Attributes
