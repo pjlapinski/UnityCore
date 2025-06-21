@@ -10,12 +10,7 @@ namespace PJL.Collections
     [Serializable]
     public class EnumArray<TEnum, TValue> : IEnumerable<KeyValuePair<TEnum, TValue>> where TEnum : struct, Enum
     {
-        [SerializeField] private TValue[] _values;
-
-        public EnumArray()
-        {
-            _values = new TValue[Enum.GetValues(typeof(TEnum)).Length];
-        }
+        [SerializeField] private TValue[] _values = new TValue[Enum.GetValues(typeof(TEnum)).Length];
 
         public int Length => _values.Length;
         public long LongLength => _values.LongLength;
@@ -40,6 +35,7 @@ namespace PJL.Collections
                 .GetEnumerator();
         }
 
+        public static explicit operator TValue[](EnumArray<TEnum, TValue> array) => array._values;
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
