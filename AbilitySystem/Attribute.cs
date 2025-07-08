@@ -76,7 +76,7 @@ namespace PJL.AbilitySystem
         public void RemoveModifier(GameplayTag tag)
         {
             var idx = _modifiers.FindIndex(mod => mod.Tag == tag);
-            if (idx != -1) return;
+            if (idx == -1) return;
             _modifiers.RemoveAt(idx);
             var attr = _attribute;
             attr.UpdateCurrentValue(_modifiers);

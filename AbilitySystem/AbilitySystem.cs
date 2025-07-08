@@ -119,7 +119,9 @@ namespace PJL.AbilitySystem
                 effect._periodTracker += value;
                 if (effect.ShouldApply)
                 {
-                    effect.Apply(this);
+                    effect._stacks += effect._effect.ModifyStacksOnApply;
+                    if (effect._effect.ApplyOnTick)
+                        effect.Apply(this);
                     effect._periodTracker = 0f;
                     OnEffectApplied.Invoke(effect._effect.Tag);
                 }
@@ -225,11 +227,11 @@ namespace PJL.AbilitySystem
         public bool CanExecuteAbility(GameplayTag ability) =>
             _abilities.TryGetValue(ability, out var a) && a.CanExecute(this);
 
-        public void ExecuteAbility(GameplayTag ability, IAbilityTarget target)
+        public void ExecuteAbility(GameplayTag ability, IEnumerable<IAbilityTarget> targets)
         {
             if (_abilities.TryGetValue(ability, out var a))
             {
-                a.Execute(this, target);
+                a.Execute(this, targets);
                 OnAbilityExecuted.Invoke(ability);
             }
         }

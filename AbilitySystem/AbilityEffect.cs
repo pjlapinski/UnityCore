@@ -21,6 +21,7 @@ namespace PJL.AbilitySystem
         [field: SerializeField] public float Period { get; set; }
         [field: SerializeField] public bool ApplyInstantly { get; set; }
         [field: SerializeField] public bool ApplyOnRemove { get; set; }
+        [field: SerializeField] public bool ApplyOnTick { get; set; }
 
         public virtual void Apply(IAbilityTarget target) {}
         public virtual void Remove(IAbilityTarget target) {}
@@ -38,11 +39,7 @@ namespace PJL.AbilitySystem
         internal bool ShouldApply => _periodTracker >= _effect.Period;
         internal bool ShouldRemove => _stacks <= 0 || (_effect.Type == EffectType.Duration && _durationTracker <= 0f);
 
-        internal void Apply(IAbilityTarget target)
-        {
-            _stacks += _effect.ModifyStacksOnApply;
-            _effect.Apply(target);
-        }
+        internal void Apply(IAbilityTarget target) => _effect.Apply(target);
 
         internal void Remove(IAbilityTarget target)
         {

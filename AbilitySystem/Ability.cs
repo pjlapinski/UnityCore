@@ -16,12 +16,13 @@ namespace PJL.AbilitySystem
         [field: SerializeField] public float Cooldown { get; set; }
         [field: SerializeField] public bool StartsOnCooldown { get; set; }
 
-        internal void Execute(AbilitySystem caster, IAbilityTarget target)
+        internal void Execute(AbilitySystem caster, IEnumerable<IAbilityTarget> targets)
         {
-            foreach (var effect in TargetEffects)
-                target.AddEffect(effect);
             foreach (var effect in CasterEffects)
                 caster.AddEffect(effect);
+            foreach (var effect in TargetEffects)
+                foreach (var target in targets)
+                    target.AddEffect(effect);
         }
     }
 
@@ -42,10 +43,10 @@ namespace PJL.AbilitySystem
             return true;
         }
 
-        internal void Execute(AbilitySystem caster, IAbilityTarget target)
+        internal void Execute(AbilitySystem caster, IEnumerable<IAbilityTarget> targets)
         {
             if (!CanExecute(caster)) return;
-            _ability.Execute(caster, target);
+            _ability.Execute(caster, targets);
         }
 
         internal void PutOnCooldown() => _cooldownTracker = _ability.Cooldown;
