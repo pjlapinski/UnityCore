@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace PJL.Utilities.Coroutines
 {
-    internal class CoroutineRunnerComponent : MonoBehaviour { }
+    public class CoroutineRunnerComponent : MonoBehaviour { }
 
     public static class CoroutineRunner
     {
@@ -14,8 +14,16 @@ namespace PJL.Utilities.Coroutines
         public static Coroutine RunDontDestroy(IEnumerator coroutine) =>
             Run(coroutine, s_runner);
 
-        public static Coroutine Run(IEnumerator coroutine) =>
-            Run(coroutine, s_runnerLocal);
+        public static Coroutine Run(IEnumerator coroutine)
+        {
+            if (s_runnerLocal == null)
+            {
+                s_runnerLocal = new GameObject("CoroutineRunnerLocal")
+                    .AddComponent<CoroutineRunnerComponent>();
+                s_targets.Add(s_runnerLocal);
+            }
+            return Run(coroutine, s_runnerLocal);
+        }
 
         public static Coroutine Run(IEnumerator coroutine, MonoBehaviour target)
         {
@@ -41,18 +49,11 @@ namespace PJL.Utilities.Coroutines
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
         private static void Initialize()
         {
-            s_targets = new()
-            {
-                s_runner,
-                s_runnerLocal
-            };
+            s_targets = new() { s_runner };
 
             s_runner = new GameObject("CoroutineRunner")
                 .AddComponent<CoroutineRunnerComponent>();
             Object.DontDestroyOnLoad(s_runner.gameObject);
-
-            s_runnerLocal = new GameObject("CoroutineRunnerLocal")
-                .AddComponent<CoroutineRunnerComponent>();
         }
     }
 }
