@@ -7,7 +7,7 @@ namespace PJL.AbilitySystem
     [Serializable]
     public enum ModifierType
     {
-        Additive, Multiplicative, Override
+        AdditivePreMult, AdditivePostMult, Multiplicative, Override
     }
 
     [Serializable]

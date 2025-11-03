@@ -16,7 +16,8 @@ namespace PJL.AbilitySystem
 
         public void UpdateCurrentValue(IEnumerable<AttributeModifier> modifiers)
         {
-            var add = 0f;
+            var addPre = 0f;
+            var addPost = 0f;
             var mul = 1f;
             var over = Option<float>.None;
 
@@ -24,11 +25,14 @@ namespace PJL.AbilitySystem
             {
                 switch (mod.Type)
                 {
-                    case ModifierType.Additive:
-                        add += mod.Value;
+                    case ModifierType.AdditivePreMult:
+                        addPre += mod.Value;
+                        break;
+                    case ModifierType.AdditivePostMult:
+                        addPost += mod.Value;
                         break;
                     case ModifierType.Multiplicative:
-                        mul *= mod.Value;
+                        mul += mod.Value;
                         break;
                     case ModifierType.Override:
                         over = mod.Value;
@@ -41,7 +45,7 @@ namespace PJL.AbilitySystem
             if (over.TryUnwrap(out var o))
                 CurrentValue = o;
             else
-                CurrentValue = (BaseValue + add) * mul;
+                CurrentValue = (BaseValue + addPre) * mul + addPost;
         }
     }
 

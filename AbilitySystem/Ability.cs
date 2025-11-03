@@ -49,7 +49,7 @@ namespace PJL.AbilitySystem
             _ability.Execute(caster, targets);
         }
 
-        internal void PutOnCooldown() => _cooldownTracker = _ability.Cooldown;
+        internal void PutOnCooldown() => _cooldownTracker = _cooldown;
         internal void PutOffCooldown() => _cooldownTracker = 0f;
 
         internal void SetCooldown(float newCd) => _cooldown = newCd;
