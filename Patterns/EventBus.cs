@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using PJL.Patterns.Editor;
 using UnityEngine;
 
 namespace PJL.Patterns

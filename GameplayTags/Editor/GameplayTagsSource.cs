@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿#if UNITY_EDITOR
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using PJL.Utilities.Extensions;
 using UnityEditor;
 using UnityEngine;
 
-namespace PJL.GameplayTags
+namespace PJL.GameplayTags.Editor
 {
     internal class GameplayTagsSource : ScriptableObject
     {
@@ -89,3 +90,4 @@ namespace PJL.GameplayTags
         }
     }
 }
+#endif
