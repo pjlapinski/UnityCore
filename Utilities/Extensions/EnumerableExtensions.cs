@@ -60,23 +60,6 @@ namespace PJL.Utilities.Extensions
             return source;
         }
 
-        public static IEnumerable<TSource> Visit<TSource>(this IList<TSource> source, Action<TSource> func)
-        {
-            for (var i = 0; i < source.Count; i++)
-                func(source[i]);
-
-            return source;
-        }
-
-        public static IEnumerable<TSource>
-            Visit<TSource, TResult>(this IList<TSource> source, Func<TSource, TResult> func)
-        {
-            for (var i = 0; i < source.Count; i++)
-                func(source[i]);
-
-            return source;
-        }
-
         public static IEnumerable<TSource> Visit<TSource>(this IList<TSource> source, Action<TSource, int> func)
         {
             for (var i = 0; i < source.Count; i++)
