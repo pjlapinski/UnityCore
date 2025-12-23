@@ -9,10 +9,10 @@ namespace PJL.GameplayTags
     [Serializable]
     public class GameplayTagsContainer : IEnumerable<GameplayTag>
     {
-        [SerializeField] [MarshalAs(UnmanagedType.ByValArray, SizeConst = GameplayTagsManager.NumTags)]
+        [SerializeField, MarshalAs(UnmanagedType.ByValArray, SizeConst = GameplayTagsManager.NumTags, ArraySubType = UnmanagedType.Bool)]
         internal bool[] _tags = new bool[GameplayTagsManager.NumTags];
 
-        [SerializeField] [MarshalAs(UnmanagedType.ByValArray, SizeConst = GameplayTagsManager.NumTags)]
+        [SerializeField, MarshalAs(UnmanagedType.ByValArray, SizeConst = GameplayTagsManager.NumTags, ArraySubType = UnmanagedType.Bool)]
         internal bool[] _parents = new bool[GameplayTagsManager.NumTags];
 
         public static GameplayTagsContainer Empty => new();
