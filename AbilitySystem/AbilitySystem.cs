@@ -11,6 +11,9 @@ namespace PJL.AbilitySystem
     public class AbilitySystem : MonoBehaviour, IAbilityTarget
     {
         [SerializeField] private AttributeValues _attributeValues;
+        [SerializeField] private AbilityList _initialAbilities;
+        [SerializeField] private TagList _initialTags;
+
         [SerializeField, ReadOnly] private HashMap<GameplayTag, AttributeTracker> _attributes;
         [SerializeField, ReadOnly] private GameplayTagsContainer _tags;
         [SerializeField, ReadOnly] private List<EffectTracker> _effects;
@@ -101,14 +104,24 @@ namespace PJL.AbilitySystem
         public bool HasTagExact(GameplayTag tag) => _tags.ContainsExact(tag);
         public void AddTag(GameplayTag tag)
         {
-            _tags.AddTag(tag);
+            AddTagSilent(tag);
             OnTagAdded.Invoke(tag);
+        }
+
+        public void AddTagSilent(GameplayTag tag)
+        {
+            _tags.AddTag(tag);
         }
 
         public void RemoveTag(GameplayTag tag)
         {
-            _tags.Remove(tag);
+            RemoveTagSilent(tag);
             OnTagRemoved.Invoke(tag);
+        }
+
+        public void RemoveTagSilent(GameplayTag tag)
+        {
+            _tags.Remove(tag);
         }
 
         public void TickEffects(float value)
@@ -191,6 +204,12 @@ namespace PJL.AbilitySystem
 
         public void AddAbility(Ability ability)
         {
+            AddAbilitySilent(ability);
+            OnAbilityAdded.Invoke(ability.Tag);
+        }
+
+        public void AddAbilitySilent(Ability ability)
+        {
             if (_abilities.ContainsKey(ability.Tag)) return;
             _abilities[ability.Tag] = new()
             {
@@ -198,13 +217,18 @@ namespace PJL.AbilitySystem
                 _cooldown = ability.Cooldown,
                 _cooldownTracker = ability.StartsOnCooldown ? ability.Cooldown : 0f
             };
-            OnAbilityAdded.Invoke(ability.Tag);
         }
+
 
         public void RemoveAbility(GameplayTag ability)
         {
-            _abilities.Remove(ability);
+            RemoveAbilitySilent(ability);
             OnAbilityRemoved.Invoke(ability);
+        }
+
+        public void RemoveAbilitySilent(GameplayTag ability)
+        {
+            _abilities.Remove(ability);
         }
 
         public void TickAbilityCooldowns(float value)
@@ -280,7 +304,9 @@ namespace PJL.AbilitySystem
         {
             if (_attributeValues == null)
             {
+#if !PJL_ABILITY_SYSTEM_LOG_EMPTY_INIT_VALUES_DISABLED
                 ContextLogger.LogFormat(LogType.Warning, "ABILITY_SYSTEM", "No attribute values assigned for object {0}.", gameObject.name);
+#endif
                 return;
             }
 
@@ -298,9 +324,39 @@ namespace PJL.AbilitySystem
                     });
         }
 
+        private void CopyInitialAbilities()
+        {
+            if (_initialAbilities == null)
+            {
+#if !PJL_ABILITY_SYSTEM_LOG_EMPTY_INIT_VALUES_DISABLED
+                ContextLogger.LogFormat(LogType.Warning, "ABILITY_SYSTEM", "No initial abilities assigned for object {0}.", gameObject.name);
+#endif
+                return;
+            }
+            
+            foreach (var data in _initialAbilities.Abilities)
+                AddAbilitySilent(data);
+        }
+
+        private void CopyInitialTags()
+        {
+            if (_initialTags == null)
+            {
+#if !PJL_ABILITY_SYSTEM_LOG_EMPTY_INIT_VALUES_DISABLED
+                ContextLogger.LogFormat(LogType.Warning, "ABILITY_SYSTEM", "No initial tags assigned for object {0}.", gameObject.name);
+#endif
+                return;
+            }
+
+            foreach (var data in _initialTags.Tags)
+                AddTagSilent(data);
+        }
+
         private void Awake()
         {
             CopyAttributesFromSet();
+            CopyInitialAbilities();
+            CopyInitialTags();
         }
 
         #endregion
