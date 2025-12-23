@@ -48,7 +48,7 @@ namespace PJL.AbilitySystem.Editor
             var value = new TagAttributeData
             {
                 _tag = tags[idx],
-                _attribute = 0,
+                _initialValue = 0,
                 _min = 0,
                 _max = 100
             };

@@ -12,7 +12,7 @@ namespace PJL.AbilitySystem.Editor
         {
             EditorGUI.BeginProperty(position, label, property);
 
-            var attrField = property.FindPropertyRelative("_attribute");
+            var attrField = property.FindPropertyRelative("_initialValue");
             var minField = property.FindPropertyRelative("_min");
             var maxField = property.FindPropertyRelative("_max");
 

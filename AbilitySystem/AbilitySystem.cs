@@ -11,10 +11,10 @@ namespace PJL.AbilitySystem
     public class AbilitySystem : MonoBehaviour, IAbilityTarget
     {
         [SerializeField] private AttributeValues _attributeValues;
-        [SerializeField] private HashMap<GameplayTag, AttributeTracker> _attributes;
-        [SerializeField] private GameplayTagsContainer _tags;
-        [SerializeField] private List<EffectTracker> _effects;
-        [SerializeField] private HashMap<GameplayTag, AbilityTracker> _abilities;
+        [SerializeField, ReadOnly] private HashMap<GameplayTag, AttributeTracker> _attributes;
+        [SerializeField, ReadOnly] private GameplayTagsContainer _tags;
+        [SerializeField, ReadOnly] private List<EffectTracker> _effects;
+        [SerializeField, ReadOnly] private HashMap<GameplayTag, AbilityTracker> _abilities;
 
         [field: Foldout("Events")]
         [field: SerializeField] public UnityEvent<GameplayTag, float> OnAttributeChanged { get; set; }
@@ -291,8 +291,8 @@ namespace PJL.AbilitySystem
                     {
                         _attribute = new Attribute
                         {
-                            BaseValue = Mathf.Clamp(data._attribute, data._min, data._max),
-                            CurrentValue = Mathf.Clamp(data._attribute, data._min, data._max),
+                            BaseValue = Mathf.Clamp(data._initialValue, data._min, data._max),
+                            CurrentValue = Mathf.Clamp(data._initialValue, data._min, data._max),
                         },
                         _modifiers = new()
                     });
