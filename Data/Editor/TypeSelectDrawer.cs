@@ -26,7 +26,8 @@ namespace PJL.Data.Editor
             EditorGUI.BeginProperty(position, label, property);
             EditorGUI.LabelField(labelRect, label);
 
-            var typeName = GetShortTypeName(property.managedReferenceFullTypename);
+            // This is the name displayed in the dropdown
+            var typeName = property.managedReferenceFullTypename;
             if (EditorGUI.DropdownButton(typeRect, new GUIContent(typeName ?? "<null>"), FocusType.Keyboard))
             {
                 var menu = new GenericMenu();
@@ -64,14 +65,7 @@ namespace PJL.Data.Editor
                     catch { return Type.EmptyTypes; }
                 })
                 .Where(type => !type.IsAbstract && baseType.IsAssignableFrom(type) && !typeof(UnityEngine.Object).IsAssignableFrom(type))
-                .ToDictionary(type => ObjectNames.NicifyVariableName(type.Name), type => type);
-
-        private static string GetShortTypeName(string typeName)
-        {
-            if (typeName.IsNullOrEmpty()) return null;
-            var parts = typeName.Split(' ');
-            return parts.Length > 1 ? parts[1].Split('.').Last() : typeName;
-        }
+                .ToDictionary(type => type.Name, type => type);
 
         private static Type TypeFromName(string typeName)
         {
