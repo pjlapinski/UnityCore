@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using NaughtyAttributes;
+using PJL.Data;
 using PJL.GameplayTags;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -30,7 +31,7 @@ namespace PJL.AbilitySystem
     [Serializable]
     internal class EffectTracker
     {
-        [SerializeReference] internal AbilityEffect _effect;
+        [SerializeReference, TypeSelect] internal AbilityEffect _effect;
         [SerializeField] internal int _stacks;
         [SerializeField] internal float _periodTracker;
         [SerializeField] internal float _durationTracker;

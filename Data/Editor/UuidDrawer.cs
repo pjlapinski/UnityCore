@@ -1,10 +1,9 @@
 ﻿#if UNITY_EDITOR
-using PJL.Data;
 using PJL.Debug;
 using UnityEditor;
 using UnityEngine;
 
-namespace PJL.Inspectors.Editor
+namespace PJL.Data.Editor
 {
     [CustomPropertyDrawer(typeof(Uuid))]
     public class UuidDrawer : PropertyDrawer

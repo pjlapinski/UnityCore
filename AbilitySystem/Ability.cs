@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using PJL.Data;
 using PJL.GameplayTags;
 using UnityEngine;
 
@@ -9,10 +10,10 @@ namespace PJL.AbilitySystem
     public class Ability : ScriptableObject
     {
         [field: SerializeField] public GameplayTag Tag { get; set; }
-        [field: SerializeReference] public List<AbilityEffect> TargetEffects { get; set; }
-        [field: SerializeReference] public List<AbilityEffect> CasterEffects { get; set; }
+        [field: SerializeReference, TypeSelect] public List<AbilityEffect> TargetEffects { get; set; }
+        [field: SerializeReference, TypeSelect] public List<AbilityEffect> CasterEffects { get; set; }
 
-        [field: SerializeReference] public List<AbilityCondition> Conditions { get; set; }
+        [field: SerializeReference, TypeSelect] public List<AbilityCondition> Conditions { get; set; }
         [field: SerializeField] public float Cooldown { get; set; }
         [field: SerializeField] public bool StartsOnCooldown { get; set; }
 
@@ -20,8 +21,8 @@ namespace PJL.AbilitySystem
         {
             foreach (var effect in CasterEffects)
                 caster.AddEffect(effect);
-            foreach (var effect in TargetEffects)
-                foreach (var target in targets)
+            foreach (var target in targets)
+                foreach (var effect in TargetEffects)
                     target.AddEffect(effect);
         }
     }
