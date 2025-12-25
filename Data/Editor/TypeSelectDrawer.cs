@@ -63,7 +63,7 @@ namespace PJL.Data.Editor
                     try { return ass.GetTypes(); }
                     catch { return Type.EmptyTypes; }
                 })
-                .Where(type => !type.IsAbstract && baseType.IsAssignableFrom(type))
+                .Where(type => !type.IsAbstract && baseType.IsAssignableFrom(type) && !typeof(UnityEngine.Object).IsAssignableFrom(type))
                 .ToDictionary(type => ObjectNames.NicifyVariableName(type.Name), type => type);
 
         private static string GetShortTypeName(string typeName)
