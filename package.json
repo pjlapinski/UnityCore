@@ -1,7 +1,7 @@
 ﻿{
-  "name": "com.pjl.unity-core",
-  "version": "1.4.2",
-  "displayName": "Unity Core",
+  "name": "com.pjl.pjl-core",
+  "version": "1.4.3",
+  "displayName": "PJL Core",
   "description": "",
   "unity": "6.0",
   "unityRelease": "45f1",
