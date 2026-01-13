@@ -10,6 +10,7 @@ namespace PJL.Utilities.Coroutines
         private static readonly Dictionary<float, WaitForSeconds> s_waitForSecondsDict = new(100, new FloatComparer());
 
         private static readonly Dictionary<int, WaitForFrames> s_waitForFramesDict = new();
+
         public static WaitForFixedUpdate FixedUpdate { get; } = new();
 
         public static WaitForEndOfFrame EndOfFrame { get; } = new();
@@ -40,7 +41,7 @@ namespace PJL.Utilities.Coroutines
 
         private class FloatComparer : IEqualityComparer<float>
         {
-            public bool Equals(float x, float y) => Mathf.Abs(x - y) <= Mathf.Epsilon;
+            public bool Equals(float x, float y) => Mathf.Approximately(x, y);
             public int GetHashCode(float obj) => obj.GetHashCode();
         }
     }
