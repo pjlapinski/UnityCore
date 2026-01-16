@@ -45,7 +45,7 @@ namespace PJL.Collections
         /// </summary>
         public void InitializeImmediate()
         {
-            if (_initialized || !Application.isPlaying) return;
+            if (_initialized) return;
             _initialized = true;
             LinkedList = new();
             if (_initialValues != null)
