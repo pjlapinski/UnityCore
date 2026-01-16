@@ -39,6 +39,18 @@ namespace PJL.Collections
         }
 
 #if UNITY_EDITOR
+        /// <summary>
+        ///     Inserts the initial values into the underlying dictionary while still preserving the initial values.
+        ///     Use only for in-editor code
+        /// </summary>
+        public void InitializeImmediate()
+        {
+            if (_initialized || !Application.isPlaying) return;
+            _initialized = true;
+            LinkedList = new();
+            if (_initialValues != null)
+                foreach (var value in _initialValues) LinkedList.AddLast(value);
+        }
 
         /// <summary>
         ///     Moves all values added to the actual linked list into the initial values. Useful when using the collection in

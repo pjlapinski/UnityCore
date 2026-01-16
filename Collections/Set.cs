@@ -27,6 +27,18 @@ namespace PJL.Collections
         }
 
 #if UNITY_EDITOR
+        /// <summary>
+        ///     Inserts the initial values into the underlying dictionary while still preserving the initial values.
+        ///     Use only for in-editor code
+        /// </summary>
+        public void InitializeImmediate()
+        {
+            if (_initialized || !Application.isPlaying) return;
+            _initialized = true;
+            HashSet = new();
+            if (_initialValues != null)
+                foreach (var value in _initialValues) HashSet.Add(value);
+        }
 
         /// <summary>
         ///     Moves all values added to the actual hash set into the initial values. Useful when using the collection in
