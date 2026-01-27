@@ -47,7 +47,6 @@ namespace PJL.Collections
         public void Uninitialize()
         {
             _initialized = false;
-            MoveValuesToInitial();
             HashSet?.Clear();
             HashSet = new();
         }

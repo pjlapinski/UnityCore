@@ -47,7 +47,6 @@ namespace PJL.Collections
         public void Uninitialize()
         {
             _initialized = false;
-            MoveValuesToInitial();
             Dictionary?.Clear();
             Dictionary = new();
         }

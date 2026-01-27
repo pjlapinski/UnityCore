@@ -59,7 +59,6 @@ namespace PJL.Collections
         public void Uninitialize()
         {
             _initialized = false;
-            MoveValuesToInitial();
             LinkedList?.Clear();
             LinkedList = new();
         }
