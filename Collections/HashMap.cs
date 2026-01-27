@@ -28,8 +28,8 @@ namespace PJL.Collections
 
 #if UNITY_EDITOR
         /// <summary>
-        ///     Inserts the initial values into the underlying dictionary while still preserving the initial values.
-        ///     Use only for in-editor code
+        /// Inserts the initial values into the underlying collection while still preserving the initial values.
+        /// Use only for in-editor code
         /// </summary>
         public void InitializeImmediate()
         {
@@ -37,19 +37,31 @@ namespace PJL.Collections
             _initialized = true;
             Dictionary = new();
             if (_initialValues != null)
-                foreach (var (key, value) in _initialValues) Dictionary[key] = value;
+                foreach (var (key, value) in _initialValues) Dictionary.Add(key, value);
         }
 
         /// <summary>
-        ///     Moves all values added to the actual dictionary into the initial values. Useful when using the collection in
-        ///     in-editor scripts
+        /// Removes all values from the underlying collection and sets it to uninitialized.
+        /// Use only for in-editor code
+        /// </summary>
+        public void Uninitialize()
+        {
+            _initialized = false;
+            MoveValuesToInitial();
+            Dictionary?.Clear();
+            Dictionary = new();
+        }
+
+        /// <summary>
+        /// Moves all values added to the actual collection into the initial values.
+        /// Use only for in-editor code
         /// </summary>
         public void MoveValuesToInitial()
         {
             var size = Dictionary.Count;
             _initialValues = new KeyValue<TKey, TValue>[size];
             var i = 0;
-            foreach (var kvp in Dictionary) _initialValues[i++] = kvp;
+            foreach (var value in Dictionary) _initialValues[i++] = value;
         }
 
 #endif
