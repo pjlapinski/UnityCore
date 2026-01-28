@@ -5,7 +5,8 @@ namespace PJL.AbilitySystem
 {
     public class AddTagsEffect : AbilityEffect
     {
-        [SerializeField] private GameplayTagsContainer _tags;
+        /// The tags to be added
+        [SerializeField, Tooltip("The tags to be added")] private GameplayTagsContainer _tags;
 
         public override void Apply(IAbilityTarget target)
         {

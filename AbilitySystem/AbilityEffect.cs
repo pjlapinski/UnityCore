@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using NaughtyAttributes;
 using PJL.Data;
 using PJL.GameplayTags;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace PJL.AbilitySystem
 {
@@ -14,15 +12,40 @@ namespace PJL.AbilitySystem
     [Serializable]
     public abstract class AbilityEffect
     {
-        [field: SerializeField] public GameplayTag Tag { get; set; }
-        [field: SerializeField] public int Stacks { get; set; } = 1;
-        [field: SerializeField] public int ModifyStacksOnApply { get; set; }
-        [field: SerializeField] public EffectType Type { get; set; }
-        [field: SerializeField] public float Duration { get; set; }
-        [field: SerializeField] public float Period { get; set; }
-        [field: SerializeField] public bool ApplyInstantly { get; set; }
-        [field: SerializeField] public bool ApplyOnRemove { get; set; }
-        [field: SerializeField] public bool ApplyOnTick { get; set; }
+        /// The tag representing this effect
+        [field: SerializeField, AllowNesting, Tooltip("The tag representing this effect")]
+        public GameplayTag Tag { get; set; }
+        /// The amount of stacks this effect applies
+        [field: SerializeField, AllowNesting, Tooltip("The amount of stacks this effect applies")] 
+        public int Stacks { get; set; } = 1;
+        /// How many stacks should be added to the effect once the AbilitySystem ticks
+        [field: SerializeField, AllowNesting, Tooltip("How many stacks should be added to the effect once the AbilitySystem ticks")] 
+        public int ModifyStacksOnApply { get; set; }
+        /// Determines how the effect is applied
+        [field: SerializeField, AllowNesting, Tooltip("Determines how the effect is applied")] 
+        public EffectType Type { get; set; }
+        /// How long should the effect last. Only allowed if Type is Duration
+        [field: SerializeField, AllowNesting, EnableIf(nameof(EnableDuration)), Tooltip("How long should the effect last. Only allowed if Type is Duration")] 
+        public float Duration { get; set; }
+        /// How often should this effect tick. Only allowed if type is not Instantaneous
+        [field: SerializeField, AllowNesting, EnableIf(nameof(EnablePeriod)), Tooltip("How often should this effect tick. Only allowed if type is not Instantaneous")] 
+        public float Period { get; set; }
+        /// Should the effect be applied immediately after it's used, or should it wait for the next tick period. Only allowed if type is not Instantaneous
+        [field: SerializeField, AllowNesting, EnableIf(nameof(EnableApplyInstantly)), Tooltip("Should the effect be applied immediately after it's used, or should it wait for the next tick period. Only allowed if type is not Instantaneous")] 
+        public bool ApplyInstantly { get; set; }
+        /// Should the effect also be applied when it's being removed
+        [field: SerializeField, AllowNesting, Tooltip("Should the effect also be applied when it's being removed")] 
+        public bool ApplyOnRemove { get; set; }
+        /// Should the effect be applied when the period elapses while ticking. Only allowed if Type is not Instantaneous
+        [field: SerializeField, AllowNesting, EnableIf(nameof(EnableApplyOnTick)), Tooltip("Should the effect be applied when the period elapses while ticking. Only allowed if Type is not Instantaneous")] 
+        public bool ApplyOnTick { get; set; }
+
+#if UNITY_EDITOR
+        private bool EnableDuration => Type == EffectType.Duration;
+        private bool EnablePeriod => Type != EffectType.Instantaneous;
+        private bool EnableApplyInstantly => Type != EffectType.Instantaneous;
+        private bool EnableApplyOnTick => Type != EffectType.Instantaneous;
+#endif
 
         public virtual void Apply(IAbilityTarget target) {}
         public virtual void Remove(IAbilityTarget target) {}

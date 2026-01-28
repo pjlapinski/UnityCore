@@ -8,5 +8,7 @@ namespace PJL.AbilitySystem
         public void AddEffect(AbilityEffect effect);
         public void RemoveEffect(AbilityEffect effect);
         public void RemoveEffect(GameplayTag effect);
+
+        public GameObject GameObject { get; }
     }
 }

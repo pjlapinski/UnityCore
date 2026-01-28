@@ -42,6 +42,8 @@ namespace PJL.AbilitySystem
         [field: Foldout("Events")]
         [field: SerializeField] public UnityEvent<GameplayTag, float> OnAbilityCooldownChanged { get; set; }
 
+        public GameObject GameObject => gameObject;
+
         public void Tick(float delta)
         {
             TickAbilityCooldowns(delta);
@@ -88,12 +90,15 @@ namespace PJL.AbilitySystem
 
         public void RemoveAttributeModifier(GameplayTag attribute, AttributeModifier modifier) => RemoveAttributeModifier(attribute, modifier.Tag);
 
+        /// Sets the current value of an attribute to the base value and removes all modifers from it
         public void ApplyAttributeModifiers(GameplayTag attribute)
         {
-            _attributes.TryGetValue(attribute, out var attr);
-            attr._attribute.BaseValue = attr.CurrentValue;
-            attr._modifiers.Clear();
-            OnAttributeChanged.Invoke(attribute, attr.CurrentValue);
+            if (_attributes.TryGetValue(attribute, out var attr))
+            {
+                attr._attribute.BaseValue = attr.CurrentValue;
+                attr._modifiers.Clear();
+                OnAttributeChanged.Invoke(attribute, attr.CurrentValue);
+            }
         }
 
         #endregion
@@ -317,8 +322,8 @@ namespace PJL.AbilitySystem
                     {
                         _attribute = new Attribute
                         {
-                            BaseValue = Mathf.Clamp(data._initialValue, data._min, data._max),
-                            CurrentValue = Mathf.Clamp(data._initialValue, data._min, data._max),
+                            BaseValue = data._initialValue,
+                            CurrentValue = data._initialValue,
                         },
                         _modifiers = new()
                     });

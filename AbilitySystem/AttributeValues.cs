@@ -8,7 +8,7 @@ namespace PJL.AbilitySystem
     internal struct TagAttributeData
     {
         [SerializeField] internal GameplayTag _tag;
-        [SerializeField] internal float _initialValue, _min, _max;
+        [SerializeField] internal float _initialValue;
     }
 
     [CreateAssetMenu(fileName = "New Attribute Values", menuName = "PJL/Ability System/Attribute Values")]

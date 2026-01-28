@@ -5,8 +5,10 @@ namespace PJL.AbilitySystem
 {
     public class AddModifierEffect : AbilityEffect
     {
-        [SerializeField] private GameplayTag _attribute;
-        [SerializeField] private AttributeModifier _modifier;
+        /// Attribute to be modified
+        [SerializeField, Tooltip("Attribute to be modified")] private GameplayTag _attribute;
+        /// Modifier to be applied
+        [SerializeField, Tooltip("Modifier to be applied")] private AttributeModifier _modifier;
 
         public override void Apply(IAbilityTarget target)
         {
