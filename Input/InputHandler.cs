@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 
 namespace PJL.Input
 {
+    [RequireComponent(typeof(PlayerInput))]
     public class InputHandler : Singleton<InputHandler>
     {
         [SerializeField] internal PlayerInput PlayerInput;
@@ -24,6 +25,8 @@ namespace PJL.Input
         protected override void Awake()
         {
             base.Awake();
+            if (PlayerInput == null) 
+                PlayerInput = GetComponent<PlayerInput>();
             if (_activeReceiver != null)
                 _activeReceiver.OnBecomeActive.Invoke();
             foreach (var e in PlayerInput.actionEvents)
