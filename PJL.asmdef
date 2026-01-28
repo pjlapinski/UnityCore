@@ -7,6 +7,7 @@
     "Unity.Localization",
     "Unity.Addressables",
     "Unity.Addressables.Editor",
-    "Unity.ResourceManager"
+    "Unity.ResourceManager",
+    "Unity.InputSystem"
   ]
 }
