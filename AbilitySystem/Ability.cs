@@ -20,16 +20,17 @@ namespace PJL.AbilitySystem
         internal void Execute(AbilitySystem caster, IEnumerable<IAbilityTarget> targets)
         {
             foreach (var effect in CasterEffects)
-                caster.AddEffect(effect);
+                caster.AddEffect(effect, caster.Id);
             foreach (var target in targets)
                 foreach (var effect in TargetEffects)
-                    target.AddEffect(effect);
+                    target.AddEffect(effect, caster.Id);
         }
     }
 
     [Serializable]
     internal class AbilityTracker
     {
+        [SerializeField] internal Uuid _casterId;
         [SerializeField] internal Ability _ability;
         [SerializeField] internal float _cooldownTracker, _cooldown;
 
@@ -47,6 +48,7 @@ namespace PJL.AbilitySystem
         internal void Execute(AbilitySystem caster, IEnumerable<IAbilityTarget> targets)
         {
             if (!CanExecute(caster)) return;
+            _casterId = caster.Id;
             _ability.Execute(caster, targets);
         }
 

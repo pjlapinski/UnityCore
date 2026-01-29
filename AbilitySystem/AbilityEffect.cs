@@ -66,6 +66,7 @@ namespace PJL.AbilitySystem
     [Serializable]
     internal class EffectTracker
     {
+        [SerializeField] internal Uuid _casterId;
         [SerializeReference, TypeSelect] internal AbilityEffect _effect;
         [SerializeField] internal int _stacks;
         [SerializeField] internal float _periodTracker;

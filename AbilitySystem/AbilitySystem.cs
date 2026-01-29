@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using NaughtyAttributes;
 using PJL.Collections;
-using PJL.Debug;
+using PJL.Data;
 using PJL.GameplayTags;
 using UnityEngine;
 using UnityEngine.Events;
@@ -10,6 +11,7 @@ namespace PJL.AbilitySystem
 {
     public class AbilitySystem : MonoBehaviour, IAbilityTarget
     {
+        [field: SerializeField] public Uuid Id { get; set; }
         [SerializeField] private AttributeValues _attributeValues;
         [SerializeField] private AbilityList _initialAbilities;
         [SerializeField] private TagList _initialTags;
@@ -49,6 +51,18 @@ namespace PJL.AbilitySystem
             TickAbilityCooldowns(delta);
             TickEffects(delta);
         }
+
+        #region Tracking
+
+        private static Dictionary<Uuid, AbilitySystem> s_systemsTracker;
+
+        public static AbilitySystem GetById(Uuid id)
+        {
+            if (s_systemsTracker == null) s_systemsTracker = new();
+            return id == Uuid.Empty ? null : s_systemsTracker.GetValueOrDefault(id);
+        }
+
+        #endregion
 
         #region Attributes
 
@@ -154,7 +168,7 @@ namespace PJL.AbilitySystem
             _effects.RemoveAll(e => e._remove);
         }
 
-        public void AddEffect(AbilityEffect effect)
+        public void AddEffect(AbilityEffect effect, Uuid casterId)
         {
             if (effect.Type == EffectType.Instantaneous)
             {
@@ -344,9 +358,17 @@ namespace PJL.AbilitySystem
 
         private void Awake()
         {
+            s_systemsTracker ??= new();
+            s_systemsTracker[Id] = this;
+
             CopyAttributesFromSet();
             CopyInitialAbilities();
             CopyInitialTags();
+        }
+
+        private void OnDestroy()
+        {
+            s_systemsTracker?.Remove(Id);
         }
 
         #endregion
