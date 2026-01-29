@@ -308,12 +308,7 @@ namespace PJL.AbilitySystem
         private void CopyAttributesFromSet()
         {
             if (_attributeValues == null)
-            {
-#if !PJL_ABILITY_SYSTEM_LOG_EMPTY_INIT_VALUES_DISABLED
-                ContextLogger.LogFormat(LogType.Warning, "ABILITY_SYSTEM", "No attribute values assigned for object {0}.", gameObject.name);
-#endif
                 return;
-            }
 
             foreach (var data in _attributeValues._data)
                 _attributes.Add(
@@ -332,12 +327,7 @@ namespace PJL.AbilitySystem
         private void CopyInitialAbilities()
         {
             if (_initialAbilities == null)
-            {
-#if !PJL_ABILITY_SYSTEM_LOG_EMPTY_INIT_VALUES_DISABLED
-                ContextLogger.LogFormat(LogType.Warning, "ABILITY_SYSTEM", "No initial abilities assigned for object {0}.", gameObject.name);
-#endif
                 return;
-            }
             
             foreach (var data in _initialAbilities.Abilities)
                 AddAbilitySilent(data);
@@ -346,12 +336,7 @@ namespace PJL.AbilitySystem
         private void CopyInitialTags()
         {
             if (_initialTags == null)
-            {
-#if !PJL_ABILITY_SYSTEM_LOG_EMPTY_INIT_VALUES_DISABLED
-                ContextLogger.LogFormat(LogType.Warning, "ABILITY_SYSTEM", "No initial tags assigned for object {0}.", gameObject.name);
-#endif
                 return;
-            }
 
             foreach (var data in _initialTags.Tags)
                 AddTagSilent(data);
