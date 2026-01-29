@@ -12,7 +12,7 @@ namespace PJL.AbilitySystem
         protected abstract void Set(Animator animator);
         protected abstract void RemoveSet(Animator animator);
 
-        public override void Apply(IAbilityTarget target)
+        public override void Apply(IAbilityTarget target, AbilitySystem caster)
         {
             if (target.GameObject == null) return;
             var animator = target.GameObject.GetComponent<Animator>();
@@ -20,7 +20,7 @@ namespace PJL.AbilitySystem
             Set(animator);
         }
 
-        public override void Remove(IAbilityTarget target)
+        public override void Remove(IAbilityTarget target, AbilitySystem caster)
         {
             if (!_setOnRemove) return;
             if (target.GameObject == null) return;
@@ -36,7 +36,7 @@ namespace PJL.AbilitySystem
         [SerializeField] private string _animatorKey;
         [SerializeField] private bool _resetOnRemove;
 
-        public override void Apply(IAbilityTarget target)
+        public override void Apply(IAbilityTarget target, AbilitySystem caster)
         {
             if (target.GameObject == null) return;
             var animator = target.GameObject.GetComponent<Animator>();
@@ -45,7 +45,7 @@ namespace PJL.AbilitySystem
             animator.SetTrigger(_animatorKey);
         }
 
-        public override void Remove(IAbilityTarget target)
+        public override void Remove(IAbilityTarget target, AbilitySystem caster)
         {
             if (!_resetOnRemove) return;
             if (target.GameObject == null) return;
