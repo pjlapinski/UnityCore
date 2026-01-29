@@ -1,7 +1,9 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace PJL.AbilitySystem
 {
+    [Serializable]
     public abstract class SetAnimatorValue : AbilityEffect
     {
         [SerializeField] protected string _animatorKey;
@@ -28,6 +30,7 @@ namespace PJL.AbilitySystem
         }
     }
 
+    [Serializable]
     public class SetAnimatorTrigger : AbilityEffect
     {
         [SerializeField] private string _animatorKey;
@@ -53,6 +56,7 @@ namespace PJL.AbilitySystem
         }
     }
 
+    [Serializable]
     public class SetAnimatorValueBool : SetAnimatorValue
     {
         [SerializeField] private bool _value, _valueOnRemove;
@@ -62,6 +66,7 @@ namespace PJL.AbilitySystem
         protected override void RemoveSet(Animator animator) => animator.SetBool(_animatorKey, _valueOnRemove);
     }
 
+    [Serializable]
     public class SetAnimatorValueFloat : SetAnimatorValue
     {
         [SerializeField] private float _value, _valueOnRemove;
@@ -71,6 +76,7 @@ namespace PJL.AbilitySystem
         protected override void RemoveSet(Animator animator) => animator.SetFloat(_animatorKey, _valueOnRemove);
     }
 
+    [Serializable]
     public class SetAnimatorValueInt : SetAnimatorValue
     {
         [SerializeField] private int _value, _valueOnRemove;

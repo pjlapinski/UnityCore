@@ -1,8 +1,10 @@
-﻿using PJL.GameplayTags;
+﻿using System;
+using PJL.GameplayTags;
 using UnityEngine;
 
 namespace PJL.AbilitySystem
 {
+    [Serializable]
     public class AddTagsEffect : AbilityEffect
     {
         /// The tags to be added

@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace PJL.AbilitySystem
 {
+    [Serializable]
     public class CasterBlockingTagsCondition : AbilityCondition
     {
         [SerializeField] private GameplayTagsContainer _tags;
