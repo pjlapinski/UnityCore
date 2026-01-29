@@ -28,12 +28,13 @@ namespace PJL.Data.Editor
 
             // This is the name displayed in the dropdown
             var typeName = property.managedReferenceFullTypename;
+            typeName = typeName?.Split('.').Last();
             if (EditorGUI.DropdownButton(typeRect, new GUIContent(typeName ?? "<null>"), FocusType.Keyboard))
             {
                 var menu = new GenericMenu();
-                foreach (var (name, type) in _inheritors)
+                foreach (var (name, type) in _inheritors!)
                 {
-                    menu.AddItem(new GUIContent(name), type.FullName == typeName, () =>
+                    menu.AddItem(new GUIContent(name), type.FullName == property.managedReferenceFullTypename, () =>
                     {
                         property.managedReferenceValue = Activator.CreateInstance(type);
                         property.serializedObject.ApplyModifiedProperties();
