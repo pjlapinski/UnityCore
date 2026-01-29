@@ -1,4 +1,5 @@
 ﻿#if UNITY_EDITOR
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,24 +12,38 @@ namespace PJL.GameplayTags.Editor
         {
             EditorGUI.BeginProperty(position, label, property);
 
+            var foldoutRect = position;
+            foldoutRect.height = EditorGUIUtility.singleLineHeight;
+            var toggleX = position.width * 3 / 4;
             // ReSharper disable once AssignmentInConditionalExpression
-            if (property.isExpanded = EditorGUI.Foldout(position, property.isExpanded, label, true))
+            if (property.isExpanded = EditorGUI.Foldout(foldoutRect, property.isExpanded, label, true))
             {
                 var asContainer = (GameplayTagsContainer)property.boxedValue;
                 if (asContainer._tags.Length < GameplayTagsManager.NumTags)
                     asContainer = new GameplayTagsContainer();
                 ++EditorGUI.indentLevel;
 
-                for (var i = 1; i < GameplayTagsManager.NumTags; ++i)
+                var tags = GameplayTagsManager
+                    .Tags
+                    .Where(t => !t.IsNone)
+                    .OrderBy(t => t.Name.ToString())
+                    .ToArray();
+                var y = position.y + EditorGUIUtility.singleLineHeight;
+                for (var i = 0; i < tags.Length; ++i)
                 {
-                    var tag = GameplayTagsManager.Tags[i];
-                    EditorGUILayout.BeginHorizontal();
+                    var rect = position;
+                    rect.y = y;
+                    rect.height = EditorGUIUtility.singleLineHeight;
+                    var toggleRect = rect;
+                    toggleRect.x = toggleX;
+                    var tag = tags[i];
+                    var idx = tags[i]._runtimeIndex;
                     EditorGUI.indentLevel += tag.Depth;
-                    var name = GameplayTagsManager.Names[i];
-                    EditorGUILayout.LabelField(asContainer._parents[i] ? name + " *" : name);
+                    var name = GameplayTagsManager.Names[idx];
+                    EditorGUI.LabelField(rect, asContainer._parents[idx] ? name + "*" : name);
                     EditorGUI.indentLevel -= tag.Depth;
-                    asContainer._tags[i] = EditorGUILayout.Toggle("", asContainer._tags[i]);
-                    EditorGUILayout.EndHorizontal();
+                    asContainer._tags[idx] = EditorGUI.Toggle(toggleRect, "", asContainer._tags[idx]);
+                    y += EditorGUIUtility.singleLineHeight;
                 }
 
                 asContainer.UpdateParents();
@@ -38,6 +53,12 @@ namespace PJL.GameplayTags.Editor
             }
 
             EditorGUI.EndProperty();
+        }
+
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        {
+            if (!property.isExpanded) return EditorGUIUtility.singleLineHeight;
+            return EditorGUIUtility.singleLineHeight * GameplayTagsManager.NumTags;
         }
     }
 }
