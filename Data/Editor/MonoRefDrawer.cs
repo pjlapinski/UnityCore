@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_EDITOR
+using System;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -53,3 +54,4 @@ namespace PJL.Data.Editor
         }
     }
 }
+#endif

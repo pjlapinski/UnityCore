@@ -25,19 +25,31 @@ namespace PJL.AbilitySystem
         [field: SerializeField, AllowNesting, Tooltip("Determines how the effect is applied")] 
         public EffectType Type { get; set; }
         /// How long should the effect last. Only allowed if Type is Duration
-        [field: SerializeField, AllowNesting, EnableIf(nameof(EnableDuration)), Tooltip("How long should the effect last. Only allowed if Type is Duration")] 
+#if UNITY_EDITOR
+        [field: EnableIf(nameof(EnableDuration))]
+#endif
+        [field: SerializeField, AllowNesting, Tooltip("How long should the effect last. Only allowed if Type is Duration")] 
         public float Duration { get; set; }
         /// How often should this effect tick. Only allowed if type is not Instantaneous
-        [field: SerializeField, AllowNesting, EnableIf(nameof(EnablePeriod)), Tooltip("How often should this effect tick. Only allowed if type is not Instantaneous")] 
+#if UNITY_EDITOR
+        [field: EnableIf(nameof(EnablePeriod))]
+#endif
+        [field: SerializeField, AllowNesting, Tooltip("How often should this effect tick. Only allowed if type is not Instantaneous")] 
         public float Period { get; set; }
         /// Should the effect be applied immediately after it's used, or should it wait for the next tick period. Only allowed if type is not Instantaneous
-        [field: SerializeField, AllowNesting, EnableIf(nameof(EnableApplyInstantly)), Tooltip("Should the effect be applied immediately after it's used, or should it wait for the next tick period. Only allowed if type is not Instantaneous")] 
+#if UNITY_EDITOR
+        [field: EnableIf(nameof(EnableApplyInstantly))]
+#endif
+        [field: SerializeField, AllowNesting, Tooltip("Should the effect be applied immediately after it's used, or should it wait for the next tick period. Only allowed if type is not Instantaneous")] 
         public bool ApplyInstantly { get; set; }
         /// Should the effect also be applied when it's being removed
         [field: SerializeField, AllowNesting, Tooltip("Should the effect also be applied when it's being removed")] 
         public bool ApplyOnRemove { get; set; }
         /// Should the effect be applied when the period elapses while ticking. Only allowed if Type is not Instantaneous
-        [field: SerializeField, AllowNesting, EnableIf(nameof(EnableApplyOnTick)), Tooltip("Should the effect be applied when the period elapses while ticking. Only allowed if Type is not Instantaneous")] 
+#if UNITY_EDITOR
+        [field: EnableIf(nameof(EnableApplyOnTick))]
+#endif
+        [field: SerializeField, AllowNesting, Tooltip("Should the effect be applied when the period elapses while ticking. Only allowed if Type is not Instantaneous")] 
         public bool ApplyOnTick { get; set; }
 
 #if UNITY_EDITOR
