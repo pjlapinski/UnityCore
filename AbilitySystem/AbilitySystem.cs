@@ -21,6 +21,8 @@ namespace PJL.AbilitySystem
         [SerializeField, ReadOnly] private List<EffectTracker> _effects;
         [SerializeField, ReadOnly] private HashMap<GameplayTag, AbilityTracker> _abilities;
 
+        #region Events
+
         [field: Foldout("Events")]
         [field: SerializeField] public UnityEvent<GameplayTag, float> OnAttributeChanged { get; set; }
         [field: Foldout("Events")]
@@ -44,6 +46,8 @@ namespace PJL.AbilitySystem
         [field: Foldout("Events")]
         [field: SerializeField] public UnityEvent<GameplayTag, float> OnAbilityCooldownChanged { get; set; }
 
+        #endregion
+
         public GameObject GameObject => gameObject;
 
         public void Tick(float delta)
@@ -65,6 +69,8 @@ namespace PJL.AbilitySystem
         #endregion
 
         #region Attributes
+
+        public IReadOnlyDictionary<GameplayTag, AttributeTracker> GetAttributeTrackers() => _attributes.Dictionary;
 
         public bool HasAttribute(GameplayTag attribute) =>
             _attributes.ContainsKey(attribute);
@@ -119,6 +125,10 @@ namespace PJL.AbilitySystem
 
         #region Effects
 
+        public GameplayTagsContainer GetTags() => _tags;
+
+        public IReadOnlyList<EffectTracker> GetEffectTrackers() => _effects;
+
         public bool HasTag(GameplayTag tag) => _tags.Contains(tag);
         public bool HasTagExact(GameplayTag tag) => _tags.ContainsExact(tag);
         public void AddTag(GameplayTag tag)
@@ -172,9 +182,9 @@ namespace PJL.AbilitySystem
         {
             if (effect.Type == EffectType.Instantaneous)
             {
-                effect.Apply(this);
+                effect.Apply(this, GetById(casterId));
                 OnEffectApplied.Invoke(effect.Tag);
-                effect.Remove(this);
+                effect.Remove(this, GetById(casterId));
                 OnEffectRemoved.Invoke(effect.Tag);
                 return;
             }
@@ -188,7 +198,7 @@ namespace PJL.AbilitySystem
 
             if (effect.ApplyInstantly)
             {
-                effect.Apply(this);
+                effect.Apply(this, GetById(casterId));
                 OnEffectApplied.Invoke(effect.Tag);
             }
         }
@@ -220,6 +230,8 @@ namespace PJL.AbilitySystem
         #endregion
 
         #region Abilities
+
+        public IReadOnlyDictionary<GameplayTag, AbilityTracker> GetAbilityTrackers() => _abilities.Dictionary;
 
         public void AddAbility(Ability ability)
         {
@@ -268,7 +280,10 @@ namespace PJL.AbilitySystem
             _abilities.TryGetValue(ability, out var a) ? a.BaseCooldown : float.PositiveInfinity;
 
         public bool CanExecuteAbility(GameplayTag ability) =>
-            _abilities.TryGetValue(ability, out var a) && a.CanExecute(this);
+            _abilities.TryGetValue(ability, out var a) && a.CanExecute(this, Array.Empty<IAbilityTarget>());
+
+        public bool CanExecuteAbility(GameplayTag ability, IEnumerable<IAbilityTarget> targets) =>
+            _abilities.TryGetValue(ability, out var a) && a.CanExecute(this, targets);
 
         public void ExecuteAbility(GameplayTag ability, IEnumerable<IAbilityTarget> targets)
         {

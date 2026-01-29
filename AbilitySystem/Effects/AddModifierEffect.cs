@@ -12,13 +12,13 @@ namespace PJL.AbilitySystem
         /// Modifier to be applied
         [SerializeField, Tooltip("Modifier to be applied")] private AttributeModifier _modifier;
 
-        public override void Apply(IAbilityTarget target)
+        public override void Apply(IAbilityTarget target, AbilitySystem caster)
         {
             if (target is not AbilitySystem system) return;
             system.AddAttributeModifier(_attribute, _modifier);
         }
 
-        public override void Remove(IAbilityTarget target)
+        public override void Remove(IAbilityTarget target, AbilitySystem caster)
         {
             if (target is not AbilitySystem system) return;
             system.RemoveAttributeModifier(_attribute, _modifier);

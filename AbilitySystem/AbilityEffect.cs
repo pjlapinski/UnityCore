@@ -59,12 +59,12 @@ namespace PJL.AbilitySystem
         private bool EnableApplyOnTick => Type != EffectType.Instantaneous;
 #endif
 
-        public virtual void Apply(IAbilityTarget target) {}
-        public virtual void Remove(IAbilityTarget target) {}
+        public virtual void Apply(IAbilityTarget target, AbilitySystem caster) {}
+        public virtual void Remove(IAbilityTarget target, AbilitySystem caster) {}
     }
 
     [Serializable]
-    internal class EffectTracker
+    public class EffectTracker
     {
         [SerializeField] internal Uuid _casterId;
         [SerializeReference, TypeSelect] internal AbilityEffect _effect;
@@ -73,14 +73,22 @@ namespace PJL.AbilitySystem
         [SerializeField] internal float _durationTracker;
         [SerializeField] internal bool _remove;
 
+        public Uuid CasterId => _casterId;
+        public AbilityEffect Effect => _effect;
+        public int Stacks => _stacks;
+        // ticks up to Effect.Period
+        public float PeriodTracker => _periodTracker;
+        // ticks down from Effect.Duration
+        public float DurationTracker => _durationTracker;
+
         internal bool ShouldApply => _periodTracker >= _effect.Period;
         internal bool ShouldRemove => _stacks <= 0 || (_effect.Type == EffectType.Duration && _durationTracker <= 0f);
 
-        internal void Apply(IAbilityTarget target) => _effect.Apply(target);
+        internal void Apply(IAbilityTarget target) => _effect.Apply(target, AbilitySystem.GetById(_casterId));
 
         internal void Remove(IAbilityTarget target)
         {
-            _effect.Remove(target);
+            _effect.Remove(target, AbilitySystem.GetById(_casterId));
             _remove = true;
         }
     }

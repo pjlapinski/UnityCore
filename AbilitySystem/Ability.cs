@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using PJL.Data;
 using PJL.GameplayTags;
 using UnityEngine;
@@ -28,15 +29,19 @@ namespace PJL.AbilitySystem
     }
 
     [Serializable]
-    internal class AbilityTracker
+    public class AbilityTracker
     {
         [SerializeField] internal Uuid _casterId;
         [SerializeField] internal Ability _ability;
         [SerializeField] internal float _cooldownTracker, _cooldown;
 
+        public Uuid CasterId => _casterId;
+        public Ability Ability => _ability;
+        public float Cooldown => _cooldown;
+
         internal float BaseCooldown => _ability.Cooldown;
 
-        internal bool CanExecute(AbilitySystem caster)
+        internal bool CanExecute(AbilitySystem caster, IEnumerable<IAbilityTarget> targets)
         {
             if (_cooldownTracker > 0f) return false;
             foreach (var condition in _ability.Conditions)
@@ -47,9 +52,10 @@ namespace PJL.AbilitySystem
 
         internal void Execute(AbilitySystem caster, IEnumerable<IAbilityTarget> targets)
         {
-            if (!CanExecute(caster)) return;
+            var abilityTargets = targets.ToArray();
+            if (!CanExecute(caster, abilityTargets)) return;
             _casterId = caster.Id;
-            _ability.Execute(caster, targets);
+            _ability.Execute(caster, abilityTargets);
         }
 
         internal void PutOnCooldown() => _cooldownTracker = _cooldown;

@@ -50,10 +50,13 @@ namespace PJL.AbilitySystem
     }
 
     [Serializable]
-    internal class AttributeTracker
+    public class AttributeTracker
     {
         [SerializeField] internal Attribute _attribute;
         [SerializeField] internal List<AttributeModifier> _modifiers;
+
+        public Attribute Attribute => _attribute;
+        public IReadOnlyCollection<AttributeModifier> Modifiers => _modifiers;
 
         public float BaseValue
         {
@@ -69,7 +72,7 @@ namespace PJL.AbilitySystem
 
         public float CurrentValue => _attribute.CurrentValue;
 
-        public void AddModifier(AttributeModifier modifier)
+        internal void AddModifier(AttributeModifier modifier)
         {
             _modifiers.Add(modifier);
             var attr = _attribute;
@@ -77,7 +80,7 @@ namespace PJL.AbilitySystem
             _attribute = attr;
         }
 
-        public void RemoveModifier(GameplayTag tag)
+        internal void RemoveModifier(GameplayTag tag)
         {
             var idx = _modifiers.FindIndex(mod => mod.Tag == tag);
             if (idx == -1) return;

@@ -12,7 +12,7 @@ namespace PJL.AbilitySystem
         /// The value by which the attribute is changed
         [SerializeField, Tooltip("The value by which the attribute is changed")] private float _value;
 
-        public override void Apply(IAbilityTarget target)
+        public override void Apply(IAbilityTarget target, AbilitySystem caster)
         {
             if (target is not AbilitySystem system) return;
             system.SetAttributeBase(_attribute, system.GetAttributeBase(_attribute) + _value);
