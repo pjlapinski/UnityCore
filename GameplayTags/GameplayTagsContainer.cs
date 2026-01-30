@@ -110,5 +110,17 @@ namespace PJL.GameplayTags
                 if (_tags[i] || _parents[i])
                     yield return GameplayTagsManager.Tags[i];
         }
+
+        public GameplayTagsContainer Copy()
+        {
+            var container = new GameplayTagsContainer();
+            for (var i = 0; i < _tags.Length; ++i)
+            {
+                container._tags[i] = _tags[i];
+                container._parents[i] = _parents[i];
+            }
+
+            return container;
+        }
     }
 }
