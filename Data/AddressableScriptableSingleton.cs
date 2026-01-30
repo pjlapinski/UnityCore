@@ -7,7 +7,7 @@ using UnityEditor.AddressableAssets.Settings;
 using System.Threading.Tasks;
 #endif
 
-namespace PJL.Patterns
+namespace PJL.Data
 {
     public class AddressableScriptableSingleton<T> : ScriptableObject where T : AddressableScriptableSingleton<T>
     {

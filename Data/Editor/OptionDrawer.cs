@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace PJL.Patterns.Editor
+namespace PJL.Data.Editor
 {
     [CustomPropertyDrawer(typeof(Option<>), true)]
     public class OptionDrawer : PropertyDrawer

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace PJL.Patterns
+namespace PJL.Data
 {
     public abstract class Singleton<T> : MonoBehaviour where T : Singleton<T>
     {

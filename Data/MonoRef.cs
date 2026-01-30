@@ -26,7 +26,6 @@ namespace PJL.Data
         }
 
         public MonoRef() { }
-        internal MonoRef(TObject o) => _object = o;
         public MonoRef(TInterface i) => Object = i;
 
         public static implicit operator TInterface(MonoRef<TInterface, TObject> obj) => obj.Object;

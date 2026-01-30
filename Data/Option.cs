@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace PJL.Patterns
+namespace PJL.Data
 {
     [Serializable]
     public struct Option<T>

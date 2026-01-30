@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace PJL.Patterns
+namespace PJL.Data
 {
     [Serializable]
     public struct Reactive<T>

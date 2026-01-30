@@ -4,7 +4,7 @@ using PJL.Utilities.Coroutines;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace PJL.ResourceManagement
+namespace PJL.SceneManagement
 {
     /// Runs ISceneInitializer.Initialize for each object in order. Runs on the next frame after Start. Order of initializers on the same game object is unspecified.
     public class SequentialSceneInitializer : MonoBehaviour
@@ -19,7 +19,7 @@ namespace PJL.ResourceManagement
             var initializers = _objectsWithInitializers.SelectMany(go => go.GetComponents<ISceneInitializer>());
             foreach (var init in initializers)
             {
-                init.Initialize();
+                yield return init.Initialize();
                 yield return WaitFor.EndOfFrame;
             }
 
