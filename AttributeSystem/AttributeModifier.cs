@@ -3,7 +3,7 @@ using PJL.GameplayTags;
 using PJL.Utilities.Extensions;
 using UnityEngine;
 
-namespace PJL.Data.Attributes
+namespace PJL.AttributeSystem
 {
     [Serializable]
     public enum AttributeModifierType { AdditiveBase, AdditiveFinal, Multiplicative }

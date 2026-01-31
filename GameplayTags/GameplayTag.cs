@@ -1,5 +1,4 @@
 ﻿using System;
-using PJL.Utilities.Extensions;
 using UnityEngine;
 
 namespace PJL.GameplayTags
@@ -32,19 +31,18 @@ namespace PJL.GameplayTags
 
         public static GameplayTag None => new(0, -1, 0);
 
-        public ReadOnlySpan<char> Name
+        public string Name
         {
             get
             {
-                var name = GameplayTagsManager.Names[_runtimeIndex].AsSpan();
-                return name.Length == 0 ? GameplayTagsManager.Names[0].AsSpan() : name;
+                var name = GameplayTagsManager.Names[_runtimeIndex];
+                return name.Length == 0 ? GameplayTagsManager.Names[0] : name;
             }
         }
 
-        public bool IsNone => _runtimeIndex == 0 || GameplayTagsManager.Names[_runtimeIndex].AsSpan().Length == 0;
-        public bool IsValid => _runtimeIndex >= 0 &&
-                               _runtimeIndex < GameplayTagsManager.NumTags &&
-                               GameplayTagsManager.Names[_runtimeIndex].AsSpan().Length > 0;
+        public bool IsNone => _runtimeIndex == 0 || GameplayTagsManager.Names[_runtimeIndex].Length == 0;
+        public bool IsValid => _runtimeIndex is >= 0 and < GameplayTagsManager.NumTags &&
+                               GameplayTagsManager.Names[_runtimeIndex].Length > 0;
         public bool IsNoneOrInvalid => IsNone || !IsValid;
         public bool IsRoot => _directParentIndex == -1;
         public int Depth => _depth;

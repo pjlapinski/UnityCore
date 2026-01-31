@@ -98,6 +98,7 @@ namespace PJL.GameplayTags.Editor
         public override void OnActivate(string searchContext, VisualElement rootElement)
         {
             _settings = GameplayTagsSource.SerializedObject;
+            RefreshData();
         }
 
         public override void OnDeactivate()
@@ -109,27 +110,25 @@ namespace PJL.GameplayTags.Editor
             var source = (GameplayTagsSource)_settings.targetObject;
             string delete = null;
 
+            // if (GUILayout.Button("Refresh"))
+            // {
+            //     RefreshData();
+            //     return;
+            // }
+
             EditorGUILayout.BeginHorizontal();
+            _newTextField = EditorGUILayout.TextField(_newTextField);
+            if (GUILayout.Button("Add") && !_newTextField.IsNullOrWhiteSpace())
+            {
+                source.Add(_newTextField);
+                _newTextField = "";
+            }
             if (GUILayout.Button("Apply"))
             {
                 await WriteChanges();
                 GameplayTagsManager.Names = GameplayTagsManager.NamesInit();
+                _newTextField = string.Empty;
                 return;
-            }
-
-            if (GUILayout.Button("Refresh"))
-            {
-                RefreshData();
-                return;
-            }
-            EditorGUILayout.EndHorizontal();
-
-            EditorGUILayout.BeginHorizontal();
-            _newTextField = EditorGUILayout.TextField(_newTextField);
-            if (GUILayout.Button("New") && !_newTextField.IsNullOrWhiteSpace())
-            {
-                source.Add(_newTextField);
-                _newTextField = "";
             }
 
             EditorGUILayout.EndHorizontal();
@@ -137,13 +136,13 @@ namespace PJL.GameplayTags.Editor
             var indent = EditorGUI.indentLevel;
 
             var tags = source._tags.Where(t => !t.IsNullOrEmpty()).OrderBy(t => t).ToArray();
-            for (var i = 0; i < tags.Length; i++)
+            foreach (var tag in tags)
             {
                 EditorGUILayout.BeginHorizontal();
-                EditorGUI.indentLevel = indent + tags[i].Count(c => c == '.');
-                EditorGUILayout.LabelField(tags[i]);
+                EditorGUI.indentLevel = indent + tag.Count(c => c == '.');
+                EditorGUILayout.LabelField(tag);
                 EditorGUI.indentLevel = indent;
-                if (GUILayout.Button("Remove")) delete = tags[i];
+                if (GUILayout.Button("Remove")) delete = tag;
 
                 EditorGUILayout.EndHorizontal();
             }
@@ -154,7 +153,7 @@ namespace PJL.GameplayTags.Editor
         [SettingsProvider]
         public static SettingsProvider Create()
         {
-            var path = "Project/PJL/Gameplay Tags";
+            const string path = "Project/PJL/Gameplay Tags";
             return new GameplayTagsSettings(path, SettingsScope.Project, GetSearchKeywordsFromPath(path));
         }
     }

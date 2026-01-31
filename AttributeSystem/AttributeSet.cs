@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace PJL.Data.Attributes
+namespace PJL.AttributeSystem
 {
     [CreateAssetMenu(fileName = "New Attribute Set", menuName = "PJL/Stats/Attribute Set")]
     public class AttributeSet : ScriptableObject

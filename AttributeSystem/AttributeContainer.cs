@@ -6,7 +6,7 @@ using PJL.GameplayTags;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace PJL.Data.Attributes
+namespace PJL.AttributeSystem
 {
     public class AttributeContainer : MonoBehaviour
     {

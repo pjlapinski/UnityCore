@@ -23,7 +23,7 @@ namespace PJL.GameplayTags
                     parent = Names.IndexOf(Names[i][..idx]);
                 }
 
-                Tags[i] = new(i, parent, depth);
+                Tags[i] = new GameplayTag(i, parent, depth);
             }
 
             SingleTagContainers = new GameplayTagsContainer[NumTags];
@@ -38,11 +38,11 @@ namespace PJL.GameplayTags
             }
         }
 
-        public static GameplayTag RequestTag(ReadOnlySpan<char> name)
+        public static GameplayTag RequestTag(string name)
         {
             for (var i = 0; i < NumTags; ++i)
             {
-                var other = Names[i].AsSpan();
+                var other = Names[i];
                 if (name == other) return Tags[i];
             }
 

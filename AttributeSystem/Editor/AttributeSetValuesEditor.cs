@@ -3,7 +3,7 @@ using System.Linq;
 using PJL.GameplayTags;
 using UnityEditor;
 
-namespace PJL.Data.Attributes.Editor
+namespace PJL.AttributeSystem.Editor
 {
     [CustomEditor(typeof(AttributeSetValues)), CanEditMultipleObjects]
     public class AttributeSetValuesEditor : UnityEditor.Editor

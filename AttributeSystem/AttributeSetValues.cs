@@ -3,7 +3,7 @@ using PJL.Collections;
 using PJL.GameplayTags;
 using UnityEngine;
 
-namespace PJL.Data.Attributes
+namespace PJL.AttributeSystem
 {
     [Serializable]
     public struct TagAttributeData

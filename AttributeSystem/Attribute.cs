@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using PJL.GameplayTags;
 using UnityEngine;
 
-namespace PJL.Data.Attributes
+namespace PJL.AttributeSystem
 {
     [Serializable]
     public struct AttributeDefinition

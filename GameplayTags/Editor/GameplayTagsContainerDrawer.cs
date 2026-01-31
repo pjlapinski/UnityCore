@@ -23,11 +23,7 @@ namespace PJL.GameplayTags.Editor
                     asContainer = new GameplayTagsContainer();
                 ++EditorGUI.indentLevel;
 
-                var tags = GameplayTagsManager
-                    .Tags
-                    .Where(t => !t.IsNone)
-                    .OrderBy(t => t.Name.ToString())
-                    .ToArray();
+                var tags = GetTags();
                 var y = position.y + EditorGUIUtility.singleLineHeight;
                 for (var i = 0; i < tags.Length; ++i)
                 {
@@ -55,10 +51,16 @@ namespace PJL.GameplayTags.Editor
             EditorGUI.EndProperty();
         }
 
+        private static GameplayTag[] GetTags() => GameplayTagsManager
+                .Tags
+                .Where(t => !t.IsNone)
+                .OrderBy(t => t.Name.ToString())
+                .ToArray();
+
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
             if (!property.isExpanded) return EditorGUIUtility.singleLineHeight;
-            return EditorGUIUtility.singleLineHeight * GameplayTagsManager.NumTags;
+            return EditorGUIUtility.singleLineHeight * (GetTags().Length + 1);
         }
     }
 }
