@@ -17,7 +17,7 @@ namespace PJL.GameplayTags
             _depth = depth;
         }
 
-        public override string ToString() => Name.ToString();
+        public override string ToString() => Name;
 
         #region Equality
 
