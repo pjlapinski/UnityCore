@@ -12,8 +12,8 @@ namespace PJL.Data.Attributes
     {
         [SerializeField] private AttributeSet _attributeSet;
         [SerializeField] private AttributeSetValues _initialValues;
-        [SerializeField] private HashMap<GameplayTag, Attribute> _attributes;
-        [SerializeField] private HashMap<GameplayTag, List<AttributeModifier>> _modifiers;
+        [SerializeField, HideInInspector] private HashMap<GameplayTag, Attribute> _attributes;
+        [SerializeField, HideInInspector] private HashMap<GameplayTag, List<AttributeModifier>> _modifiers;
 
         [field: SerializeField, Foldout("Events")] public UnityEvent<Attribute> OnAttributeModified { get; set; }
         [field: SerializeField, Foldout("Events")] public UnityEvent<Attribute, GameplayTag> OnModifierAdded { get; set; }
