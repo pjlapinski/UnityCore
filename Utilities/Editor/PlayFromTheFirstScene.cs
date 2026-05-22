@@ -7,7 +7,7 @@ public static class PlayFromTheFirstScene
 {
     private const string playFromFirstMenuStr = "Edit/Always Start From Scene 0 &p";
 
-    private static bool playFromFirstScene
+    public static bool PlayFromFirstScene
     {
         get => EditorPrefs.HasKey(playFromFirstMenuStr) && EditorPrefs.GetBool(playFromFirstMenuStr);
         set => EditorPrefs.SetBool(playFromFirstMenuStr, value);
@@ -16,17 +16,17 @@ public static class PlayFromTheFirstScene
     [MenuItem(playFromFirstMenuStr, false, 150)]
     private static void PlayFromFirstSceneCheckMenu()
     {
-        playFromFirstScene = !playFromFirstScene;
-        Menu.SetChecked(playFromFirstMenuStr, playFromFirstScene);
+        PlayFromFirstScene = !PlayFromFirstScene;
+        Menu.SetChecked(playFromFirstMenuStr, PlayFromFirstScene);
 
-        ShowNotifyOrLog(playFromFirstScene ? "Play from scene 0" : "Play from current scene");
+        ShowNotifyOrLog(PlayFromFirstScene ? "Play from scene 0" : "Play from current scene");
     }
 
     // The menu won't be gray out, we use this validate method for update check state
     [MenuItem(playFromFirstMenuStr, true)]
     private static bool PlayFromFirstSceneCheckMenuValidate()
     {
-        Menu.SetChecked(playFromFirstMenuStr, playFromFirstScene);
+        Menu.SetChecked(playFromFirstMenuStr, PlayFromFirstScene);
         return true;
     }
 
@@ -34,7 +34,7 @@ public static class PlayFromTheFirstScene
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void LoadFirstSceneAtGameBegins()
     {
-        if (!playFromFirstScene)
+        if (!PlayFromFirstScene)
             return;
 
         if (EditorBuildSettings.scenes.Length == 0)
