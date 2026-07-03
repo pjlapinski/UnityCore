@@ -12,6 +12,8 @@ namespace PJL.Collections
     {
         [SerializeField] private TValue[] _values = new TValue[Enum.GetValues(typeof(TEnum)).Length];
 
+        public EnumArray() { }
+
         public EnumArray(IEnumerable<KeyValuePair<TEnum, TValue>> src)
         {
             if (src is EnumArray<TEnum, TValue> ea)
