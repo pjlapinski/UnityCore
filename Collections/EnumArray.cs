@@ -12,6 +12,21 @@ namespace PJL.Collections
     {
         [SerializeField] private TValue[] _values = new TValue[Enum.GetValues(typeof(TEnum)).Length];
 
+        public EnumArray(IEnumerable<KeyValuePair<TEnum, TValue>> src)
+        {
+            if (src is EnumArray<TEnum, TValue> ea)
+            {
+                for (var i = 0; i < ea.Length; ++i)
+                    _values[i] = ea._values[i];
+                return;
+            }
+
+            var l = Enum.GetValues(typeof(TEnum)).Length;
+            var arr = src.ToArray();
+            for (var i = 0; i < l; ++i)
+                _values[i] = arr.ElementAt(i).Value;
+        }
+
         public int Length => _values.Length;
         public long LongLength => _values.LongLength;
 
