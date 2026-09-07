@@ -12,7 +12,7 @@ namespace PJL.Data
             get
             {
                 if (s_instance != null) return s_instance;
-                var instances = FindObjectsByType<T>(FindObjectsSortMode.None);
+                var instances = FindObjectsByType<T>();
                 switch (instances.Length)
                 {
                     case 0:

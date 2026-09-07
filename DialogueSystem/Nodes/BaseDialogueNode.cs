@@ -1,4 +1,5 @@
 ﻿using System;
+using NaughtyAttributes;
 using PJL.Debug;
 using UnityEngine;
 using UnityEngine.Localization;
@@ -10,7 +11,7 @@ namespace PJL.DialogueSystem
     public abstract class BaseDialogueNode : Node
     {
         [Input] [SerializeField] private Empty _in;
-        [SerializeField] private ushort _speakerIndex;
+        [SerializeField, Dropdown(nameof(Speakers)), Label("Speaker")] private int _speakerIndex;
 
         private DialogueGraph _dg;
 
@@ -56,6 +57,25 @@ namespace PJL.DialogueSystem
 
         internal abstract BaseDialogueNode GetNextNode();
         internal abstract BaseDialogueNode GetExitNode(ushort path);
+
+        private DropdownList<int> Speakers => GetSpeakers(Graph);
+
+        private static DropdownList<int> GetSpeakers(DialogueGraph dg)
+        {
+            var list = new DropdownList<int>();
+            if (dg.Speakers.Length == 0)
+            {
+                list.Add(DialogueGraph.NullPathSelector, -1);
+                return list;
+            }
+
+            for (var i = 0; i < dg.Speakers.Length; i++)
+            {
+                list.Add(dg.Speakers[i], i);
+            }
+
+            return list;
+        }
     }
 
     [Serializable]

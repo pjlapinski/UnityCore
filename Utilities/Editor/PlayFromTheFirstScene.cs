@@ -43,7 +43,7 @@ public static class PlayFromTheFirstScene
             return;
         }
 
-        foreach (var go in Object.FindObjectsByType<GameObject>(FindObjectsSortMode.None))
+        foreach (var go in Object.FindObjectsByType<GameObject>())
             go.SetActive(false);
 
         SceneManager.LoadScene(0);
