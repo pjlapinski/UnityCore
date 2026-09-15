@@ -1,4 +1,5 @@
 ﻿using System;
+using PJL.EditorAttributes;
 using UnityEngine;
 
 namespace PJL.Data
@@ -7,7 +8,7 @@ namespace PJL.Data
     public struct Option<T>
     {
         [SerializeField] private bool _isNone;
-        [SerializeField] private T _value;
+        [SerializeField, DisableIf(nameof(_isNone))] private T _value;
 
         public bool IsNone
         {

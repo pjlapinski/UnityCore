@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace PJL.SaveSystem.Serialization
 {
-    public class JsonSerializationProvider : BaseSerializationProvider
+    public class JsonSerializationProvider : BaseNewtonsoftSerializationProvider
     {
         public JsonSerializationProvider(string preambleSeparator) : base(preambleSeparator) { }
 
@@ -42,10 +42,8 @@ namespace PJL.SaveSystem.Serialization
             StringBuilder.Append(PreambleSeparator);
 
             var sw = new StringWriter();
-            using (var writer = new JsonTextWriter(sw))
-            {
-                Serializer.Serialize(writer, serializable);
-            }
+            using var writer = new JsonTextWriter(sw);
+            Serializer.Serialize(writer, serializable);
 
             StringBuilder.Append(sw);
             return StringBuilder.ToString();

@@ -5,11 +5,9 @@ using Newtonsoft.Json.Bson;
 
 namespace PJL.SaveSystem.Serialization
 {
-    public class BsonSerializationProvider : BaseSerializationProvider
+    public class BsonSerializationProvider : BaseNewtonsoftSerializationProvider
     {
-        public BsonSerializationProvider(string preambleSeparator) : base(preambleSeparator)
-        {
-        }
+        public BsonSerializationProvider(string preambleSeparator) : base(preambleSeparator) { }
 
         public override bool TryDeserialize<T>(string text, out T serializable)
         {

@@ -10,8 +10,7 @@ namespace PJL.Data
     {
         // Both those fields are only for Unity to know how to actually save the data on disk
         // They occupy the same space in memory as "Guid" and as such, any modifications to
-        // the Guid variable, are also preserved in these ulongs. Newtonsoft serializes this class
-        // as the string representation of the Guid
+        // the Guid variable, are also preserved in these ulongs
         [SerializeField, FieldOffset(0)] private ulong _0;
         [SerializeField, FieldOffset(8)] private ulong _1;
         [FieldOffset(0)] public Guid Guid;

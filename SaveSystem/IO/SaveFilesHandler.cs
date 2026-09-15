@@ -18,8 +18,7 @@ namespace PJL.SaveSystem.IO
             PreambleSeparator = preambleSeparator;
         }
 
-        private string SavesPath =>
-            $"{Application.persistentDataPath}{Path.DirectorySeparatorChar}{_saveDirectory}{Path.DirectorySeparatorChar}";
+        private string SavesPath => Path.Join(Application.persistentDataPath, _saveDirectory);
 
         public string PreambleSeparator { get; }
 
@@ -124,7 +123,7 @@ namespace PJL.SaveSystem.IO
             return true;
         }
 
-        private string GetSaveFullPath(int idx) => $"{SavesPath}{idx}{_fileFormat}";
+        private string GetSaveFullPath(int idx) => Path.Join(SavesPath, $"{idx}{_fileFormat}");
 
         private void EnsureSavesDirectoryExists()
         {

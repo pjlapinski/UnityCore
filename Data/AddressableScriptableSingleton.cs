@@ -28,7 +28,12 @@ namespace PJL.Data
         }
 
 #if UNITY_EDITOR
-        protected virtual async void Awake()
+        protected virtual void Awake()
+        {
+            Init();
+        }
+
+        private async void Init()
         {
             await Task.Yield();
             var settings = AddressableAssetSettingsDefaultObject.Settings;

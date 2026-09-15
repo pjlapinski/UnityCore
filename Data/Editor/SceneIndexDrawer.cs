@@ -16,20 +16,19 @@ namespace PJL.Data.Editor
 
             EditorGUI.BeginProperty(position, label, property);
 
-            property.intValue = EditorGUILayout.Popup(label, property.intValue, _scenes);
+            property.intValue = EditorGUI.Popup(position, label.text, property.intValue, _scenes);
 
             EditorGUI.EndProperty();
         }
 
-        public override float GetPropertyHeight(SerializedProperty property, GUIContent label) => 0f;
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label) => 
+            EditorGUIUtility.singleLineHeight;
 
         private void GetScenes()
         {
             _scenes = new string[SceneManager.sceneCountInBuildSettings];
             for (var i = 0; i < _scenes.Length; ++i)
-            {
                 _scenes[i] = ScenePathToName(SceneUtility.GetScenePathByBuildIndex(i));
-            }
         }
 
         private string ScenePathToName(string path)

@@ -6,6 +6,7 @@ using System.Reflection;
 using PJL.Utilities.Extensions;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Assemblies;
 
 namespace PJL.Data.Editor
 {
@@ -57,9 +58,8 @@ namespace PJL.Data.Editor
             EditorGUI.GetPropertyHeight(property, label) + (property.managedReferenceValue == null ? 0 : EditorGUIUtility.singleLineHeight);
 
         private void BuildInheritorsMap(Type baseType) =>
-            _inheritors = AppDomain
-                .CurrentDomain
-                .GetAssemblies()
+            _inheritors = CurrentAssemblies
+                .GetLoadedAssemblies()
                 .SelectMany(ass =>
                 {
                     try { return ass.GetTypes(); }
