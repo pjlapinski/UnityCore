@@ -1,12 +1,13 @@
-﻿using UnityEditor;
+﻿#if UNITY_EDITOR
+using PJL.Utilities.Extensions;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-#if UNITY_EDITOR
-namespace PJL.Data.Editor
+namespace PJL.EditorAttributes.Editor
 {
-    [CustomPropertyDrawer(typeof(SceneIndexAttribute))]
-    public class SceneIndexDrawer : PropertyDrawer
+    [CustomPropertyDrawer(typeof(SceneAttribute))]
+    public class SceneDrawer : PropertyDrawer
     {
         private string[] _scenes;
 
@@ -14,11 +15,18 @@ namespace PJL.Data.Editor
         {
             if (_scenes == null) GetScenes();
 
-            EditorGUI.BeginProperty(position, label, property);
+            using var _ = new EditorGUI.PropertyScope(position, label, property);
 
-            property.intValue = EditorGUI.Popup(position, label.text, property.intValue, _scenes);
-
-            EditorGUI.EndProperty();
+            if (property.propertyType == SerializedPropertyType.String)
+            {
+                var idx = _scenes.IndexOf(property.stringValue);
+                idx = EditorGUI.Popup(position, label.text, idx, _scenes);
+                property.stringValue = _scenes[idx == -1 ? 0 : idx];
+            }
+            else if (property.propertyType == SerializedPropertyType.Integer)
+            {
+                property.intValue = EditorGUI.Popup(position, label.text, property.intValue, _scenes);
+            }
         }
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label) => 

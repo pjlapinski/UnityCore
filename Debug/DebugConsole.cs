@@ -5,9 +5,9 @@ using UnityEngine;
 
 namespace PJL.Debug
 {
-    public class DebugConsole
+    public class DebugConsole : IDisposable
     {
-        private const int FontSize = 32;
+        public int FontSize { get; set; } = 12;
         private readonly List<ICheat> _cheats;
         private readonly List<string> _history;
 
@@ -38,7 +38,7 @@ namespace PJL.Debug
             }
         }
 
-        ~DebugConsole()
+        public void Dispose()
         {
             UnityEngine.Debug.developerConsoleEnabled = true;
         }
@@ -63,11 +63,14 @@ namespace PJL.Debug
             }
 
             const int padding = 5;
-            const int inputHeight = FontSize + FontSize / 2;
+            const float confirmWidth = .1f;
+            var inputHeight = FontSize * 1.5f;
             var backgroundRect = new Rect(0, 0, Screen.width, Screen.height * .6f);
             var scrollRect = new Rect(padding, padding, backgroundRect.width - 2 * padding,
                 backgroundRect.height - 2 * padding);
-            var textFieldRect = new Rect(0, backgroundRect.height, backgroundRect.width, inputHeight);
+            var textFieldWidth = backgroundRect.width * (1 - confirmWidth);
+            var textFieldRect = new Rect(0, backgroundRect.height, textFieldWidth, inputHeight);
+            var confirmBtnRect = new Rect(textFieldWidth, backgroundRect.height, backgroundRect.width * confirmWidth, inputHeight);
             var fullHeight = _logs
                 .Select(log => new GUIContent(log))
                 .Sum(content => GUI.skin.label.CalcHeight(content, backgroundRect.width));
@@ -92,6 +95,10 @@ namespace PJL.Debug
 
             GUI.EndScrollView();
             _textField = GUI.TextField(textFieldRect, _textField);
+            if (GUI.Button(confirmBtnRect, new GUIContent("->")))
+            {
+                ConfirmInput();
+            }
 
             if (_newLog)
             {
@@ -131,7 +138,7 @@ namespace PJL.Debug
 
         public void LogReceived(string message, string trace, LogType type)
         {
-            _logs.Add(message);
+            _logs.Add($"[{DateTime.Now:HH:mm:ss}] {message}");
             _newLog = true;
         }
 

@@ -1,8 +1,8 @@
 ﻿using System;
 using UnityEngine;
 
-namespace PJL.Data
+namespace PJL.EditorAttributes
 {
     [AttributeUsage(AttributeTargets.Field)]
-    public class SceneIndexAttribute : PropertyAttribute { }
+    public class TagAttribute : PropertyAttribute { }
 }
