@@ -194,5 +194,12 @@ namespace PJL.Utilities.Extensions
         }
 
         #endregion
+
+        #region UniqueBy
+
+        public static IEnumerable<TSource> UniqueBy<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, TResult> func) =>
+            source.GroupBy(func).Select(x => x.First());
+
+        #endregion
     }
 }
