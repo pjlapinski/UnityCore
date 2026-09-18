@@ -58,22 +58,18 @@ namespace PJL.Data.Editor
             EditorGUI.GetPropertyHeight(property, label) + (property.managedReferenceValue == null ? 0 : EditorGUIUtility.singleLineHeight);
 
         private void BuildInheritorsMap(Type baseType) =>
-            _inheritors = CurrentAssemblies
-                .GetLoadedAssemblies()
-                .SelectMany(ass =>
-                {
-                    try { return ass.GetTypes(); }
-                    catch { return Type.EmptyTypes; }
-                })
-                .Where(type => !type.IsAbstract && baseType.IsAssignableFrom(type) && !typeof(UnityEngine.Object).IsAssignableFrom(type))
-                .ToDictionary(type => type.Name, type => type);
+            _inheritors = TypeCache
+                .GetTypesDerivedFrom(baseType)
+                .Where(type => !type.IsAbstract && !typeof(UnityEngine.Object).IsAssignableFrom(type))
+                .UniqueBy(type => type.FullName)
+                .ToDictionary(type => type.FullName, type => type);
 
         private static Type TypeFromName(string typeName)
         {
             if (typeName.IsNullOrEmpty()) return null;
             var parts = typeName.Split(' ');
             var assembly = Assembly.Load(parts[0]);
-            return assembly.GetType(parts[1]);
+            return assembly.GetType(string.Join(' ', parts.Skip(1)));
         }
     }
 }
