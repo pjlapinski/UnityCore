@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 using PJL.Utilities.Extensions;
 using UnityEditor;
@@ -46,40 +47,42 @@ namespace PJL.GameplayTags.Editor
             return buildTargets;
         }
 
-        private async Task WriteChanges()
+        private string Indent(int i) => string.Join("", Enumerable.Repeat("    ", Math.Max(0, i)));
+
+        private void WriteChanges()
         {
             var source = (GameplayTagsSource)_settings.targetObject;
             if (!Directory.Exists(TargetDir)) Directory.CreateDirectory(TargetDir);
             if (!File.Exists(TargetRefPath))
             {
-                await using var writer = File.CreateText(TargetRefPath);
-                await writer.WriteLineAsync("{");
-                await writer.WriteLineAsync("    \"reference\": \"PJL\"");
-                await writer.WriteLineAsync("}");
-                writer.Close();
-            }
-            await using (var writer = File.CreateText(TargetPath))
-            {
-                await writer.WriteLineAsync("namespace PJL.GameplayTags\n{");
-                await writer.WriteLineAsync("    public static partial class GameplayTagsManager\n    {");
-
-                await writer.WriteLineAsync($"        internal const int NumTags = {source._tags.Count + 1};\n");
-
-                await writer.WriteLineAsync("        internal static string[] NamesInit() => new []\n        {");
-                await writer.WriteLineAsync("            \"None\",");
-                foreach (var tag in source._tags) await writer.WriteLineAsync($"            \"{tag}\",");
-                await writer.WriteLineAsync("        };\n");
-
-                await writer.WriteLineAsync("        internal static string[] Names = NamesInit();");
-
-
-                await writer.WriteLineAsync("    }\n}");
-                writer.Close();
+                var sbd = new StringBuilder();
+                sbd.AppendLine("{")
+                    .Append(Indent(1)).AppendLine("\"reference\": \"PJL\"")
+                    .AppendLine("}");
+                File.WriteAllText(TargetRefPath, sbd.ToString());
             }
 
-            await Task.Yield();
+            var sb = new StringBuilder();
+            sb
+                .AppendLine("namespace PJL.GameplayTags")
+                .AppendLine("{")
+                .Append(Indent(1)).AppendLine("public static partial class GameplayTagsManager")
+                .Append(Indent(1)).AppendLine("{")
+                .Append(Indent(2)).AppendLine($"internal const int NumTags = {source._tags.Count + 1};")
+                .Append(Indent(2)).AppendLine("internal static string[] NamesInit() => new []")
+                .Append(Indent(2)).AppendLine("{")
+                .Append(Indent(3)).AppendLine("\"None\",");
+            foreach (var tag in source._tags)
+                sb.Append(Indent(3)).Append('"').Append(tag).Append('"').AppendLine(",");
+            sb
+                .Append(Indent(2)).AppendLine("};")
+                .AppendLine("")
+                .Append(Indent(2)).AppendLine("internal static string[] Names = NamesInit();")
+                .Append(Indent(1)).AppendLine("}")
+                .AppendLine("}");
+
+            File.WriteAllText(TargetPath, sb.ToString());
             AssetDatabase.Refresh();
-            await Task.Yield();
 
             foreach (var target in AllBuildTargets())
             {
@@ -105,7 +108,7 @@ namespace PJL.GameplayTags.Editor
         {
         }
 
-        public override async void OnGUI(string searchContext)
+        public override void OnGUI(string searchContext)
         {
             var source = (GameplayTagsSource)_settings.targetObject;
             string delete = null;
@@ -125,7 +128,7 @@ namespace PJL.GameplayTags.Editor
             }
             if (GUILayout.Button("Apply"))
             {
-                await WriteChanges();
+                WriteChanges();
                 GameplayTagsManager.Names = GameplayTagsManager.NamesInit();
                 _newTextField = string.Empty;
                 return;
