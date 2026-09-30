@@ -1,15 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
 namespace PJL.Utilities.Coroutines
 {
     public class CoroutineRunnerComponent : MonoBehaviour { }
 
-    public static class CoroutineRunner
+    public static partial class CoroutineRunner
     {
-        private static CoroutineRunnerComponent s_runner, s_runnerLocal;
-        private static List<MonoBehaviour> s_targets;
+        [AutoStaticsCleanup] private static CoroutineRunnerComponent s_runner, s_runnerLocal;
+        [AutoStaticsCleanup] private static List<MonoBehaviour> s_targets;
 
         public static Coroutine RunDontDestroy(IEnumerator coroutine) =>
             Run(coroutine, s_runner);

@@ -1,10 +1,11 @@
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
 namespace PJL.Utilities
 {
-    public static class CameraUtils
+    public static partial class CameraUtils
     {
-        private static Camera s_mainCamera;
+        [AutoStaticsCleanup] private static Camera s_mainCamera;
 
         public static Camera Main
         {

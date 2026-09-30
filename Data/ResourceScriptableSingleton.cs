@@ -1,11 +1,12 @@
 ﻿using System;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
 namespace PJL.Data
 {
-    public class ResourceScriptableSingleton<T> : ScriptableObject where T : ResourceScriptableSingleton<T>
+    public partial class ResourceScriptableSingleton<T> : ScriptableObject where T : ResourceScriptableSingleton<T>
     {
-        private static T s_instance;
+        [AutoStaticsCleanup] private static T s_instance;
 
         public static T Instance
         {

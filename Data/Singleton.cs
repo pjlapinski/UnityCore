@@ -1,11 +1,12 @@
 using System;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
 namespace PJL.Data
 {
-    public abstract class Singleton<T> : MonoBehaviour where T : Singleton<T>
+    public abstract partial class Singleton<T> : MonoBehaviour where T : Singleton<T>
     {
-        private static T s_instance;
+        [AutoStaticsCleanup] private static T s_instance;
 
         public static T Instance
         {

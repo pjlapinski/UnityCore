@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.Scripting.LifecycleManagement;
+using UnityEngine;
 using UnityEngine.AddressableAssets;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -9,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace PJL.Data
 {
-    public class AddressableScriptableSingleton<T> : ScriptableObject where T : AddressableScriptableSingleton<T>
+    public partial class AddressableScriptableSingleton<T> : ScriptableObject where T : AddressableScriptableSingleton<T>
     {
-        private static T s_instance;
+        [AutoStaticsCleanup] private static T s_instance;
 
         public static T Instance
         {

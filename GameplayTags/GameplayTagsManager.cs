@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Linq;
 using PJL.Utilities.Extensions;
+using Unity.Scripting.LifecycleManagement;
 
 namespace PJL.GameplayTags
 {
     public static partial class GameplayTagsManager
     {
-        internal static readonly GameplayTagsContainer[] SingleTagContainers;
-        internal static readonly GameplayTagsContainer[] ParentContainers;
-        internal static readonly GameplayTag[] Tags;
+        [AutoStaticsCleanup] internal static readonly GameplayTagsContainer[] SingleTagContainers;
+        [AutoStaticsCleanup] internal static readonly GameplayTagsContainer[] ParentContainers;
+        [AutoStaticsCleanup] internal static readonly GameplayTag[] Tags;
 
         static GameplayTagsManager()
         {
